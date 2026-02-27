@@ -1131,14 +1131,20 @@ function showResults() {
 async function sendResults() {
   const statusEl = document.getElementById('sendStatus');
   const btnEnviar = document.getElementById('btn-enviar');
+  
+  // Aqui buscamos os dados da Cleo ou de qualquer cliente:
+  const nome = document.getElementById('patientName')?.value || 'Não informado';
+  const idade = document.getElementById('patientAge')?.value || 'Não informada';
+  const prof = document.getElementById('patientProfession')?.value || 'Não informada';
+
   if (btnEnviar) { btnEnviar.disabled = true; btnEnviar.textContent = 'Enviando...'; }
-  if (statusEl) { statusEl.style.display = 'block'; statusEl.textContent = 'Conectando ao banco de dados...'; }
+  if (statusEl) { 
+      statusEl.style.display = 'block'; 
+      statusEl.style.color = '#4A2F26';
+      statusEl.textContent = 'Sincronizando com o Consultório Virtual...'; 
+  }
 
   try {
-    const nome = document.getElementById('patientName')?.value || 'Não informado';
-    const idade = document.getElementById('patientAge')?.value || 'Não informada';
-    const prof = document.getElementById('patientProfession')?.value || 'Não informada';
-
     const response = await fetch('https://nyelqgsqpqoasywdioxi.supabase.co/rest/v1/clientes', {
       method: 'POST',
       headers: {
@@ -1149,17 +1155,30 @@ async function sendResults() {
       },
       body: JSON.stringify({
         nome_completo: nome,
-        anotacoes: `Idade: ${idade} | Profissão: ${prof}`,
+        anotacoes: "Idade: " + idade + " | Profissão: " + prof,
         origem: "Inventário de Esquemas",
-        resultados_teste: { dominios: typeof scoresText !== 'undefined' ? scoresText : 'Ver PDF' }
+        resultados_teste: { 
+            dominios: typeof scoresText !== 'undefined' ? scoresText : 'Ver PDF',
+            total: typeof answers !== 'undefined' ? Object.keys(answers).length : 0
+        }
       })
     });
 
-    if (!response.ok) throw new Error('Erro no envio');
-    if (statusEl) { statusEl.style.color = '#687C5A'; statusEl.textContent = '✅ Sucesso! Dados salvos no seu prontuário.'; }
+    if (!response.ok) throw new Error('Erro na rede');
+
+    if (statusEl) {
+        statusEl.style.color = '#687C5A';
+        statusEl.textContent = '✅ Sucesso! O seu diagnóstico já está no prontuário da Dra. Cleo.';
+    }
+    if (btnEnviar) btnEnviar.textContent = 'Enviado ✔';
+    
   } catch (err) {
-    if (statusEl) { statusEl.style.color = '#A84848'; statusEl.textContent = '❌ Erro ao salvar. Use o botão de PDF.'; }
-    if (btnEnviar) { btnEnviar.disabled = false; btnEnviar.textContent = 'Enviar Resultados'; }
+    console.error(err);
+    if (statusEl) {
+        statusEl.style.color = '#A84848';
+        statusEl.textContent = '❌ Erro de conexão. Por favor, salve o PDF abaixo.';
+    }
+    if (btnEnviar) { btnEnviar.disabled = false; btnEnviar.textContent = 'Tentar Novamente'; }
   }
 }
 </script>
