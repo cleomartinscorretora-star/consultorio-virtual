@@ -211,13 +211,14 @@
     }
   }
 
- // 3. Função Mágica: Buscar dados reais no Supabase
+// 3. Função Mágica: Buscar dados reais no Supabase (CORRIGIDA)
   async function loadPatients() {
     const tbody = document.getElementById('patients-tbody');
     tbody.innerHTML = '<tr><td colspan="4" class="status-loading">Buscando registros...</td></tr>';
 
     try {
-      const response = await fetch('https://nyelqgsqpqoasywdioxi.supabase.co/rest/v1/clientes?select=*&order=created_at.desc', {
+      // Retiramos o "order=created_at.desc" que estava causando o bloqueio
+      const response = await fetch('https://nyelqgsqpqoasywdioxi.supabase.co/rest/v1/clientes?select=*', {
         method: 'GET',
         headers: {
           'apikey': 'sb_publishable_IVMMnw4_9uF4C6-RBiElUg_lvIq8JRX',
@@ -226,7 +227,6 @@
         }
       });
 
-      // NOVO: Se der erro, ele vai ler o motivo exato do Supabase
       if (!response.ok) {
         const erroDetalhado = await response.text();
         throw new Error(`Código ${response.status}: ${erroDetalhado}`);
@@ -240,20 +240,28 @@
       }
 
       tbody.innerHTML = '';
-      data.forEach(paciente => {
-        const dataFormatada = new Date(paciente.created_at).toLocaleDateString('pt-BR');
+      
+      // Invertemos a ordem manualmente para a última paciente aparecer primeiro
+      data.reverse().forEach(paciente => {
+        // Tentamos buscar a data de onde ela existir
+        let dataFormatada = 'Recente';
+        if (paciente.created_at) {
+          dataFormatada = new Date(paciente.created_at).toLocaleDateString('pt-BR');
+        } else if (paciente.resultados_teste && paciente.resultados_teste.data) {
+          dataFormatada = paciente.resultados_teste.data;
+        }
+
         tbody.innerHTML += `
           <tr>
             <td style="font-weight: 500;">${paciente.nome_completo || 'Não informado'}</td>
             <td><span class="service-tag tag-diagnostico">${paciente.origem || 'Inventário'}</span></td>
             <td>${dataFormatada}</td>
-            <td><button class="btn-outline">Abrir Ficha</button></td>
+            <td><button class="btn-outline" onclick="alert('No próximo passo, este botão abrirá os gráficos da paciente!')">Abrir Ficha</button></td>
           </tr>
         `;
       });
 
     } catch (error) {
-      // NOVO: Mostra o erro real em vermelho na tabela
       tbody.innerHTML = `<tr><td colspan="4" class="status-loading" style="color: var(--error-red);">Opa! O sistema disse: ${error.message}</td></tr>`;
     }
   }
