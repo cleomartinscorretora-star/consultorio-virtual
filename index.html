@@ -68,7 +68,7 @@
   .patient-summary { background: #FFF; border: 1px solid var(--border); border-radius: 14px; padding: 20px; margin-bottom: 30px; display: grid; grid-template-columns: repeat(2, 1fr); gap: 15px; }
   .score-card { background: #FFF; border: 1px solid var(--border); border-radius: 12px; padding: 15px; margin-bottom: 10px; display: flex; align-items: center; gap: 15px; }
   .bar-track { flex: 1; height: 8px; background: #EEE; border-radius: 10px; overflow: hidden; }
-  .bar-fill { height: 100%; background: var(--terracotta); transition: width 0.8s ease; }
+  .bar-fill { height: 100%; background: var(--terracotta); }
 
   @media (min-width: 600px) { .scale-options { grid-template-columns: repeat(6, 1fr); } }
 </style>
@@ -78,7 +78,7 @@
 <div class="header">
   <div class="header-logo"><svg viewBox="0 0 24 24" width="18" fill="white"><path d="M12 2C6.48 2 2 6.48 2 12s4.48 10 10 10 10-4.48 10-10S17.52 2 12 2zm-1 15v-4H7l5-8v4h4l-5 8z"/></svg></div>
   <div><div class="header-title">Inventário de Esquemas</div><div class="header-subtitle">Cleo Martins - Psicoterapia Integrativa</div></div>
-  <div class="progress-bar-wrap" id="pWrap" style="display:none"><div class="progress-track"><div class="progress-fill" id="pFill"></div></div><div class="progress-text" id="pText" style="font-size:12px; color:var(--gray-mid); font-weight:500;">0 / 212</div></div>
+  <div class="progress-bar-wrap" id="pWrap" style="display:none"><div class="progress-track"><div class="progress-fill" id="pFill"></div></div></div>
 </div>
 
 <div class="container-wide">
@@ -124,8 +124,365 @@
 </div>
 
 <script>
-// ESCALA DE AVALIAÇÃO
 const scaleLabels = ["","Inteiramente falsa","Em grande parte falsa","Levemente mais verdadeira","Moderadamente verdadeira","Em grande parte verdadeira","Descreve perfeitamente"];
 
 const domains = [
-  { key:"pe", name:"Desconexão e Rejeição", questions:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,
+  { key:"pe", name:"Desconexão e Rejeição", questions:[1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30,31,32,33,34,35,36,37,38,39,40,41,42,43,44,45,46,47,48,49,50] },
+  { key:"au", name:"Autonomia e Desempenho", questions:[51,52,53,54,55,56,57,58,59,60,61,62,63,64,65,66,67,68,69,70,71,72,73,74,75,76,77,78,79,80,81,82,83,84,85,86,87,88,89,90,91,92,93,94,95,96,97,98,99,100] },
+  { key:"li", name:"Limites Prejudicados", questions:[101,102,103,104,105,106,107,108,109,110,111,112,113,114,115,116,117,118,119,120,121,122,123,124,125,126,127,128,129,130,131,132,133,134,135,136,137,138,139,140] },
+  { key:"oo", name:"Orientação para o Outro", questions:[141,142,143,144,145,146,147,148,149,150,151,152,153,154,155,156,157,158,159,160,161,162,163,164,165,166,167,168,169,170,171,172,173,174,175,176,177,178,179,180] },
+  { key:"si", name:"Supervigilância e Inibição", questions:[181,182,183,184,185,186,187,188,189,190,191,192,193,194,195,196,197,198,199,200,201,202,203,204,205,206,207,208,209,210,211,212] }
+];
+
+const questionsData = [
+  [1,"As pessoas não conseguiram satisfazer minhas necessidades emocionais."],
+  [2,"Eu não recebi amor e atenção."],
+  [3,"De um modo geral, não tenho ninguém para me dar conselhos e apoio emocional."],
+  [4,"A maior parte do tempo, não tenho ninguém para me dar carinho, compartilhar comigo e se importar profundamente com o que me acontece."],
+  [5,"Eu não tive ninguém que quisesse se aproximar e passar bastante tempo comigo em grande parte da minha vida."],
+  [6,"Em geral, não havia pessoas para me dar carinho, segurança e afeição."],
+  [7,"Eu não senti que era especial para alguém, em grande parte da minha vida."],
+  [8,"Em geral, não tenho ninguém que realmente me escute, me compreenda ou esteja sintonizado com minhas verdadeiras necessidades e sentimentos."],
+  [9,"Eu, raramente tenho alguma pessoa forte para me dar bons conselhos ou orientação quando não tenho certeza do que fazer."],
+  [10,"Eu me preocupo com a possibilidade de as pessoas que eu amo morrerem, mesmo que haja poucas razões médicas para confirmar minhas preocupações."],
+  [11,"Percebo que me agarro às pessoas com as quais tenho intimidade, por ter medo de que elas me deixem."],
+  [12,"Eu me preocupo com a possibilidade das pessoas que gosto me deixarem ou me abandonarem."],
+  [13,"Sinto que me falta uma base estável de apoio emocional."],
+  [14,"Não espero que os relacionamentos importantes durem; acredito que eles vão terminar."],
+  [15,"Sinto que me apego a parceiros/as que não são capazes de se comprometerem comigo."],
+  [16,"No final, acabarei só."],
+  [17,"Quando sinto que alguém com quem eu me importo está se afastando, fico desesperado."],
+  [18,"Às vezes, tenho tanto medo de que as pessoas me deixem que acabo fazendo com que se afastem."],
+  [19,"Fico incomodado quando alguém me deixa sozinho, mesmo que por pouco tempo."],
+  [20,"Não posso esperar que as pessoas que me apóiam estejam sempre disponíveis."],
+  [21,"Não devo ficar realmente íntimo das pessoas, porque não posso ter certeza de que poderei contar sempre com elas."],
+  [22,"Parece que as pessoas importantes da minha vida estão sempre indo e vindo."],
+  [23,"Tenho muito medo de que as pessoas que eu amo encontrem alguém que vão preferir e me deixem."],
+  [24,"As pessoas que me são próximas têm sido muito imprevisíveis; ora são legais, ora estão zangadas, chateadas, absorvidas em si mesmas, brigando, e assim por diante."],
+  [25,"Preciso tanto das pessoas que tenho medo de perdê-las."],
+  [26,"Eu me sinto indefeso se não tiver pessoas para me proteger, às quais eu me preocupo muito em perdê-las."],
+  [27,"Não posso ser eu mesmo ou expressar o que realmente sinto, pois as pessoas me deixariam."],
+  [28,"Sinto que as pessoas querem tirar vantagem de mim."],
+  [29,"Frequentemente, sinto que tenho que me proteger dos outros."],
+  [30,"Sinto que não posso baixar a guarda na presença dos outros, pois eles me prejudicariam intencionalmente."],
+  [31,"Se uma pessoa é legal comigo, fico imaginando que ela está querendo alguma coisa."],
+  [32,"É só uma questão de tempo antes que as pessoas me traiam."],
+  [33,"A maioria das pessoas só pensa em si mesma."],
+  [34,"Tenho grande dificuldade em confiar nas pessoas."],
+  [35,"Desconfio muito dos motivos dos outros."],
+  [36,"As outras pessoas raramente são honestas; elas geralmente não são o que parecem."],
+  [37,"Eu geralmente fico procurando os motivos escondidos das pessoas."],
+  [38,"Se acho que alguém quer me prejudicar, tento prejudicá-la/o primeiro."],
+  [39,"As pessoas têm de provar coisas para mim antes que eu confie nelas."],
+  [40,"Invento 'testes' para as pessoas para ver se elas estão me dizendo a verdade e se estão bem intencionadas."],
+  [41,"Acredito no ditado: 'quem não controla é controlado'."],
+  [42,"Fico com raiva quando penso como fui maltratado pelas pessoas durante toda a minha vida."],
+  [43,"Por toda a minha vida, pessoas que me eram próximas tiraram vantagem de mim ou me usaram para seus propósitos."],
+  [44,"Fui abusado fisicamente, emocionalmente ou sexualmente por pessoas importantes na minha vida."],
+  [45,"Eu não me encaixo."],
+  [46,"Sou fundamentalmente diferente das outras pessoas."],
+  [47,"Eu não pertenço a ninguém; sou um solitário."],
+  [48,"Sinto-me alienado das outras pessoas."],
+  [49,"Eu me sinto isolado e sozinho."],
+  [50,"Sempre me sinto excluída dos grupos."],
+  [51,"Ninguém me entende realmente."],
+  [52,"A minha família sempre foi diferente das famílias que nos cercavam."],
+  [53,"Às vezes, me sinto um alienígena."],
+  [54,"Se eu desaparecesse amanhã, ninguém perceberia."],
+  [55,"Nenhum/a homem/mulher que eu desejar vai me amar depois de saber dos meus defeitos."],
+  [56,"Ninguém que eu desejar vai querer ficar perto de mim depois que conhecer meu verdadeiro eu."],
+  [57,"Sou inerentemente defeituoso e cheio de falhas."],
+  [58,"Por mais que eu tente, sinto que não conseguirei que um/a homem/mulher significativo/a me respeite ou sinta que eu tenho valor."],
+  [59,"Não sou digno do amor, da atenção e do respeito dos outros."],
+  [60,"Sinto que não mereço ser amado."],
+  [61,"Sou inaceitável demais, de todas as maneiras possíveis, para me revelar aos outros."],
+  [62,"Se as pessoas descobrissem meus defeitos básicos, eu não conseguiria encará-las."],
+  [63,"Quando as pessoas gostam de mim, sinto que as estou enganando."],
+  [64,"Frequentemente, sou atraído por pessoas que são muito críticas ou me rejeitam."],
+  [65,"Tenho segredos que eu não quero que as pessoas próximas a mim descubram."],
+  [66,"Foi por minha culpa que meus pais não conseguiram me amar o suficiente."],
+  [67,"Não deixo que as pessoas conheçam meu verdadeiro eu."],
+  [68,"Um dos meus maiores medos é que meus defeitos sejam expostos."],
+  [69,"Não posso compreender como ninguém conseguiu me amar."],
+  [70,"Mesmo quando as coisas parecem estar indo bem, sinto que isto é apenas temporário."],
+  [71,"Se algo de bom acontecer, fico preocupado(a) se algo de ruim não vai acontecer em seguida."],
+  [72,"Todo cuidado é pouco; quase sempre alguma coisa vai mal."],
+  [73,"Por mais que trabalhe, fico preocupado(a) com a possibilidade de ficar na miséria e perder quase tudo que possuo."],
+  [74,"As pessoas que valorizo não iriam querer se associar a mim devido ao meu status social (por exemplo, renda, nível de instrução, profissão)."],
+  [75,"Fico preocupado(a) com a possibilidade de uma decisão errada provocar uma catástrofe."],
+  [76,"Quase nada do que eu faço no trabalho (ou na escola) é tão bom quanto o que os outros fazem."],
+  [77,"Sou incompetente no que se refere às realizações."],
+  [78,"A maioria das pessoas é mais capaz do que eu no trabalho e em suas realizações."],
+  [79,"Eu sou um fracasso."],
+  [80,"Não tenho tanto talento quanto a maioria das pessoas tem em sua profissão."],
+  [81,"Não sou tão inteligente quanto a maioria das pessoas no que se refere a trabalho (ou estudo)."],
+  [82,"Sinto-me humilhado por meus fracassos e inadequações na esfera do trabalho."],
+  [83,"Frequentemente me sinto embaraçado perto das pessoas porque não estou à altura delas em termos de realização."],
+  [84,"Muitas vezes comparo minhas realizações com as dos outros e acho que eles são muito mais bem-sucedidos."],
+  [85,"Não me sinto capaz de me arranjar sozinho no dia-a-dia."],
+  [86,"Preciso que as outras pessoas me ajudem a fazer as coisas."],
+  [87,"Não me sinto capaz de manejar bem as situações sem ajuda."],
+  [88,"Acredito que as pessoas podem cuidar melhor de mim melhor do que eu mesmo."],
+  [89,"Tenho dificuldade em lidar com tarefas novas fora do trabalho, a menos que tenha alguém para me orientar."],
+  [90,"Penso em mim como uma pessoa dependente, no que se refere ao funcionamento cotidiano."],
+  [91,"Acabo estragando tudo o que tento fazer, mesmo fora do trabalho (ou da escola)."],
+  [92,"Sou incapaz em quase todas as áreas da vida."],
+  [93,"Se eu confiar no meu próprio julgamento nas situações do dia-a-dia, tomarei a decisão errada."],
+  [94,"Falta-me bom senso."],
+  [95,"Não se pode confiar em meu julgamento nas situações do dia-a-dia."],
+  [96,"Não confio em minha capacidade de resolver os problemas que surgem no cotidiano."],
+  [97,"Sinto que preciso de alguém em quem eu possa confiar para me dar conselhos sobre questões práticas."],
+  [98,"Sinto-me mais como uma criança do que como uma pessoa adulta quando é preciso assumir responsabilidades do cotidiano."],
+  [99,"Acho as responsabilidades do dia-a-dia esmagadoras."],
+  [100,"Não consigo deixar de sentir que algo de ruim vai acontecer."],
+  [101,"Sinto que algum desastre (natural, criminal, financeiro ou médico) vai acontecer a qualquer momento."],
+  [102,"Tenho medo de me tornar um 'sem-teto' ou um abandonado à própria sorte."],
+  [103,"Tenho medo de ser atacado."],
+  [104,"Sinto que devo ter muito cuidado com dinheiro, ou acabarei sem nada."],
+  [105,"Tomo muitas precauções para não adoecer e não me machucar."],
+  [106,"Tenho medo de perder todo o meu dinheiro e ficar pobre."],
+  [107,"Tenho medo de pegar uma doença séria, mesmo que nada de sério tenha sido diagnosticado pelos médicos."],
+  [108,"Sou uma pessoa medrosa."],
+  [109,"Eu me preocupo muito com todas as coisas horríveis que acontecem no mundo: crime, poluição, e assim por diante."],
+  [110,"Muitas vezes, acho que posso enlouquecer."],
+  [111,"Sinto, frequentemente, que vou ter um ataque de ansiedade."],
+  [112,"Tenho muito medo de ter um ataque cardíaco, embora haja poucas razões médicas que justifiquem minha preocupação."],
+  [113,"Acho que o mundo é um lugar perigoso."],
+  [114,"Não consegui me separar de meu pai/minha mãe, ou de ambos, assim como outras pessoas da minha idade parecem conseguir."],
+  [115,"Meu pai/minha mãe, ou ambos, e eu, tendemos a nos envolver excessivamente com a vida e com os problemas uns dos outros."],
+  [116,"É muito difícil para meu pai/minha mãe, ou ambos, e eu, escondermos detalhes íntimos uns dos outros sem nos sentirmos traídos ou culpados."],
+  [117,"Meu pai/minha mãe, ou ambos, e eu, temos que nos falar quase todos os dias, ou um de nós se sente culpado, magoado, desapontado ou sozinho."],
+  [118,"Muitas vezes, sinto que não tenho uma identidade separada da de meus pais ou parceiro/a."],
+  [119,"Muitas vezes me parece que meus pais estão vivendo por intermédio de mim - eu não tenho uma vida própria."],
+  [120,"É muito difícil para eu manter alguma distância das pessoas de quem sou íntimo; não é fácil para eu ter um senso separado de mim mesmo."],
+  [121,"Estou tão envolvido com meu/minha parceiro/a ou com meus pais que não sei realmente quem sou, ou o que quero."],
+  [122,"Tenho dificuldade em separar meu ponto de vista, ou dos meus pais ou parceiro/a."],
+  [123,"Sinto que não tenho nenhuma privacidade no que se refere aos meus pais ou parceiro/a."],
+  [124,"Sinto que meus pais estão, ou ficaram, muito magoados por eu morar sozinho, longe deles."],
+  [125,"Deixo as pessoas fazerem o que querem porque tenho medo das conseqüências."],
+  [126,"Acho que se eu fizer o que quero, só vou arranjar problemas."],
+  [127,"Sinto que não tenho escolhas além de ceder ao desejo das pessoas, ou elas vão me rejeitar ou retaliar de alguma forma."],
+  [128,"Nos meus relacionamentos, deixo a outra pessoa ter o controle."],
+  [129,"Sempre deixei os outros escolherem por mim, de modo que não sei realmente o que quero."],
+  [130,"Sinto que as maiores decisões da minha vida não foram realmente minhas."],
+  [131,"Eu me preocupo muito em agradar os outros para que eles não me rejeitem."],
+  [132,"Tenho muita dificuldade em exigir que meus direitos sejam respeitados e que meus sentimentos sejam levados em conta."],
+  [133,"Eu me vingo das pessoas de maneira sutil, em vez de demonstrar minha raiva."],
+  [134,"Vou muito além do que a maioria das pessoas para evitar confrontações."],
+  [135,"Coloco as necessidades dos outros antes das minhas, ou me sinto culpado."],
+  [136,"Sinto culpa quando desaponto as pessoas."],
+  [137,"Dou mais às pessoas do que recebo delas."],
+  [138,"Sou aquele que geralmente acaba cuidando das pessoas de quem sou próximo."],
+  [139,"Não há nada que não possa aceitar quando amo alguém."],
+  [140,"Sou uma boa pessoa, pois penso nos outros mais do que em mim mesmo."],
+  [141,"No trabalho, normalmente sou aquele que se apresenta como voluntário para fazer as tarefas extras, ou trabalhar mais tempo."],
+  [142,"Por mais ocupado que esteja, eu sempre arranjo tempo para os outros."],
+  [143,"Consigo me virar com muito pouco, porque as minhas necessidades são mínimas."],
+  [144,"Só me sinto feliz quando aqueles que me cercam estão felizes."],
+  [145,"Fico tão ocupado fazendo coisas para as pessoas que gosto que tenho pouco tempo para mim."],
+  [146,"Sempre fui aquele que escuta os problemas de todo mundo."],
+  [147,"Fico mais à vontade dando um presente do que recebendo."],
+  [148,"As pessoas me vêem fazendo mais pelos outros e pouco por mim."],
+  [149,"Por mais que eu dê, nunca é suficiente."],
+  [150,"Se faço o que quero, me sinto muito mal."],
+  [151,"É muito difícil para eu pedir aos outros que atendam às minhas necessidades."],
+  [152,"Tenho medo de perder o controle das minhas ações."],
+  [153,"Tenho medo de machucar muito as pessoas, física ou emocionalmente, caso perca o controle da minha raiva."],
+  [154,"Sinto que preciso controlar as minhas emoções e impulsos, ou algo de ruim pode acontecer."],
+  [155,"Dentro de mim há muita raiva e ressentimentos que não expresso."],
+  [156,"Tenho muita vergonha de demonstrar sentimentos positivos em relação aos outros (por exemplo: afeição, sinais de cuidado)."],
+  [157,"Acho embaraçoso expressar meus sentimentos para os outros."],
+  [158,"Tenho dificuldade em ser carinhoso e espontâneo."],
+  [159,"Eu me controlo tanto que as pessoas acham que eu não sou emotivo/afetivo."],
+  [160,"As pessoas me vêem como emocionalmente contida."],
+  [161,"Preciso ser o melhor em tudo que faço; não consigo aceitar vir em segundo lugar."],
+  [162,"Tento manter tudo dentro da mais perfeita ordem."],
+  [163,"Preciso causar a melhor impressão, praticamente, o tempo todo."],
+  [164,"Tento fazer o melhor, não consigo aceitar o 'suficientemente bom'."],
+  [165,"Tenho tantas coisas para fazer que quase não me sobra tempo para relaxar de verdade."],
+  [166,"Quase nada é bom o bastante; sempre posso fazer melhor."],
+  [167,"Preciso cumprir todas as minhas responsabilidades."],
+  [168,"Sinto que existe uma pressão constante sobre mim para conquistar e fazer as coisas."],
+  [169,"Meus relacionamentos são prejudicados porque exijo demais de mim."],
+  [170,"Minha saúde sofre porque me pressiono demais para sair bem."],
+  [171,"Muitas vezes sacrifico prazer e felicidade para estar à altura dos meus padrões."],
+  [172,"Se cometo um erro, mereço ser muito criticado."],
+  [173,"Não consigo me soltar ou me desculpar por meus erros com facilidade."],
+  [174,"Sou uma pessoa muito competitiva."],
+  [175,"Dou muito valor a dinheiro e status."],
+  [176,"Tenho que ser sempre o 'Número 1' em termos de desempenho."],
+  [177,"Tenho muita dificuldade em aceitar um 'não' como resposta quando quero alguma coisa de alguém."],
+  [178,"Geralmente me zango, ou me irrito, quando não consigo aquilo que quero."],
+  [179,"Sou especial e não deveria ter que aceitar muitas das restrições impostas às outras pessoas."],
+  [180,"Detesto ser obrigado a fazer alguma coisa, ou impedido de fazer o que quero."],
+  [181,"Acho que não deveria ter que obedecer às regras e convenções normais assim como os outros."],
+  [182,"Sinto que aquilo que tenho a oferecer é muito mais valioso do que as contribuições dos outros."],
+  [183,"Geralmente coloco as minhas necessidades acima das necessidades dos outros."],
+  [184,"Muitas vezes sinto que estou tão envolvido com as minhas prioridades que não tenho tempo para os amigos ou a família."],
+  [185,"As pessoas frequentemente me dizem que sou muito controlador em relação a como as coisas devem ser feitas."],
+  [186,"Fico muito irritado quando as pessoas não fazem o que eu lhes peço."],
+  [187,"Não tolero que as pessoas me digam o que fazer."],
+  [188,"Tenho grande dificuldade para deixar de beber, fumar, comer demais e modificar outros comportamentos problemáticos."],
+  [189,"Parece que não consigo me disciplinar e levar até o fim as tarefas rotineiras ou chatas."],
+  [190,"Muitas vezes, me permito obedecer impulsos e expressar emoções que me trazem problemas ou machucam as pessoas."],
+  [191,"Quando não consigo atingir algum objetivo, fico facilmente frustrado e desisto."],
+  [192,"Para mim, é muito difícil sacrificar uma gratificação imediata para atingir um objetivo a longo prazo."],
+  [193,"Depois que começo a sentir raiva, é comum não conseguir controlá-la."],
+  [194,"Tendendo a fazer muitas coisas em excesso, mesmo sabendo que isso não é bom para mim."],
+  [195,"Eu me aborreço muito facilmente."],
+  [196,"Quando as tarefas ficam difíceis, geralmente não consigo perseverar e concluí-las."],
+  [197,"Não consigo me concentrar em nada por muito tempo."],
+  [198,"Não consigo me obrigar a fazer coisas de que não gosto, mesmo sabendo que é para o meu próprio bem."],
+  [199,"Perco a calma diante da ofensa mais insignificante."],
+  [200,"Raramente consigo cumprir minhas resoluções."],
+  [201,"Quase nunca deixo de mostrar às pessoas o que realmente sinto, seja qual for o custo disso."],
+  [202,"Frequentemente faço, por impulso, coisas que mais tarde lamento."],
+  [203,"Ter dinheiro e conhecer pessoas importantes me faz sentir uma pessoa de valor."],
+  [204,"Aquilo que consigo alcançar tem mais valor para mim se for algo em que os outros reparem."],
+  [205,"Sinto-me pouco importante, a não ser que receba muita atenção dos outros."],
+  [206,"Quando faço uma intervenção em uma reunião ou quando sou apresentado a alguém em um grupo, para mim é importante obter reconhecimento e admiração."],
+  [207,"Receber muitos elogios dos outros me faz sentir como uma pessoa que tem valor."],
+  [208,"Se cometer um erro mereço ser castigado."],
+  [209,"Se não me esforçar ao máximo é de esperar que as coisas corram mal."],
+  [210,"Se não fizer bem o que me compete mereço sofrer as consequências."],
+  [211,"Não interessa o motivo pelo qual cometi um erro; quando faço algo errado é preciso arcar com as consequências."],
+  [212,"Sou uma pessoa má que merece ser castigada."]
+];
+
+const answers = {};
+let currentMod = 0;
+
+function startQuiz() {
+  if(!document.getElementById('pNome').value) { alert("Por favor, identifique-se no formulário."); return; }
+  document.getElementById('pWrap').style.display = 'flex';
+  document.getElementById('scrIntro').classList.remove('active');
+  document.getElementById('scrQuest').classList.add('active');
+  renderModule(0);
+}
+
+function renderModule(idx) {
+  currentMod = idx;
+  const mod = domains[idx];
+  const wrap = document.getElementById('qWrap');
+  let html = `<div class="domain-header" style="margin-bottom:30px">
+    <span style="color:var(--terracotta); font-size:12px; font-weight:600; text-transform:uppercase">Módulo ${idx+1} de 5</span>
+    <h2 style="font-family:Lora; font-size:24px">${mod.name}</h2>
+  </div>`;
+
+  mod.questions.forEach(qNum => {
+    const q = questionsData.find(x => x[0] === qNum) || [qNum, "Questão Clínica " + qNum];
+    const ans = answers[qNum];
+    html += `<div class="question-card ${ans?'answered':''}" id="q-${qNum}">
+      <div class="question-num">${ans?'✓':qNum}</div>
+      <p class="question-text">${q[1]}</p>
+      <div class="scale-options">
+        ${[1,2,3,4,5,6].map(v => `
+          <button class="scale-btn ${ans===v?'selected':''}" onclick="setAns(${qNum},${v},this)">
+            <strong>${v}</strong>
+            <span>${scaleLabels[v]}</span>
+          </button>
+        `).join('')}
+      </div>
+    </div>`;
+  });
+
+  html += `<div class="nav-row">
+    ${idx>0?`<button class="btn-nav" onclick="renderModule(${idx-1})">← Voltar</button>`:`<div></div>`}
+    <button class="btn-nav primary" onclick="checkMod()">${idx<4?'Próximo Passo →':'Gerar Resultados'}</button>
+  </div>`;
+
+  wrap.innerHTML = html;
+  window.scrollTo(0,0);
+  updateProgress();
+}
+
+function setAns(q, v, btn) {
+  answers[q] = v;
+  const card = document.getElementById('q-'+q);
+  card.classList.remove('missing');
+  card.classList.add('answered');
+  card.querySelector('.question-num').textContent = '✓';
+  btn.parentElement.querySelectorAll('.scale-btn').forEach(b => b.classList.remove('selected'));
+  btn.classList.add('selected');
+  updateProgress();
+}
+
+function checkMod() {
+  const mod = domains[currentMod];
+  const missing = mod.questions.filter(q => !answers[q]);
+  if(missing.length > 0) {
+    missing.forEach(q => document.getElementById('q-'+q).classList.add('missing'));
+    alert(`⚠️ Atenção: Faltam ${missing.length} respostas nesta página.`);
+    document.getElementById('q-'+missing[0]).scrollIntoView({behavior:'smooth', block:'center'});
+    return;
+  }
+  if(currentMod < 4) renderModule(currentMod + 1); else showRes();
+}
+
+function updateProgress() {
+  const count = Object.keys(answers).length;
+  document.getElementById('pFill').style.width = (count/212*100)+'%';
+}
+
+function showRes() {
+  document.getElementById('scrQuest').classList.remove('active');
+  document.getElementById('scrRes').classList.add('active');
+  const nome = document.getElementById('pNome').value;
+  const data = document.getElementById('pData').value;
+  document.getElementById('pSumm').innerHTML = `
+    <div><label>Paciente</label><strong>${nome}</strong></div>
+    <div><label>Data</label><strong>${data}</strong></div>
+  `;
+
+  let scores = '';
+  domains.forEach(d => {
+    const sum = d.questions.reduce((a, q) => a + (answers[q]||0), 0);
+    const avg = (sum / d.questions.length).toFixed(2);
+    const pct = ((avg-1)/5*100);
+    scores += `<div class="score-card">
+      <div style="flex:1"><strong>${d.name}</strong></div>
+      <div class="bar-track"><div class="bar-fill" style="width:${pct}%"></div></div>
+      <div style="font-weight:700">${avg}</div>
+    </div>`;
+  });
+  document.getElementById('dScores').innerHTML = scores;
+}
+
+async function sendToSupabase() {
+  const btn = document.getElementById('btnEnv');
+  const stat = document.getElementById('sStat');
+  btn.disabled = true; btn.textContent = 'Enviando...';
+  stat.style.display = 'block'; stat.textContent = 'Sincronizando com o prontuário...';
+
+  const resText = domains.map(d => {
+    const avg = (d.questions.reduce((a,q)=>a+answers[q],0)/d.questions.length).toFixed(2);
+    return `${d.name}: ${avg}`;
+  }).join(' | ');
+
+  try {
+    const resp = await fetch('https://nyelqgsqpqoasywdioxi.supabase.co/rest/v1/clientes', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': 'sb_publishable_IVMMnw4_9uF4C6-RBiElUg_lvIq8JRX',
+        'Authorization': 'Bearer sb_publishable_IVMMnw4_9uF4C6-RBiElUg_lvIq8JRX'
+      },
+      body: JSON.stringify({
+        nome_completo: document.getElementById('pNome').value,
+        anotacoes: `Idade: ${document.getElementById('pIdade').value} | Profissão: ${document.getElementById('pProfissao').value}`,
+        origem: "Inventário Online",
+        resultados_teste: { resumo: resText }
+      })
+    });
+    if(resp.ok) {
+      stat.textContent = '✅ Sucesso! Dados salvos no seu Consultório Virtual.';
+      btn.textContent = 'Sincronizado ✔';
+    } else throw new Error();
+  } catch(e) {
+    stat.textContent = '❌ Erro ao enviar. Tente gerar o PDF.';
+    btn.disabled = false; btn.textContent = 'Tentar Novamente';
+  }
+}
+</script>
+</body>
+</html>
