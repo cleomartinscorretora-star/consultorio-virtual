@@ -1131,18 +1131,49 @@ function showResults() {
 async function sendResults() {
   const statusEl = document.getElementById('sendStatus');
   const btnEnviar = document.getElementById('btn-enviar');
+  const totalNecessario = 212; //
   
-  // 1. Captura inteligente: procura por 'patientName' ou 'pNome'
-  const nomeVal = document.getElementById('patientName')?.value || document.getElementById('pNome')?.value || 'Cleo (Teste)';
-  const idadeVal = document.getElementById('patientAge')?.value || document.getElementById('pidade')?.value || 'Não informada';
-  const profVal = document.getElementById('patientProfession')?.value || 'Não informada';
-
-  if (btnEnviar) { btnEnviar.disabled = true; btnEnviar.textContent = 'Sincronizando...'; }
-  if (statusEl) { 
-      statusEl.style.display = 'block'; 
-      statusEl.style.color = '#4A2F26';
-      statusEl.textContent = 'Enviando para o seu Consultório Virtual...'; 
+  // 1. LIMPAR DESTAQUES ANTERIORES
+  // Remove qualquer borda vermelha de tentativas anteriores
+  for (let i = 1; i <= totalNecessario; i++) {
+    const container = document.getElementById(`question-container-${i}`);
+    if (container) container.style.border = 'none';
   }
+
+  // 2. VERIFICAR QUAIS PERGUNTAS ESTÃO FALTANDO
+  let faltantes = [];
+  for (let i = 1; i <= totalNecessario; i++) {
+    if (!answers[i]) { // Se a pergunta 'i' não estiver no objeto de respostas
+      faltantes.push(i);
+      // Destaca o container da pergunta faltante
+      const container = document.getElementById(`question-container-${i}`);
+      if (container) {
+        container.style.border = '2px solid #A84848'; // Vermelho da sua paleta
+        container.style.borderRadius = '8px';
+        container.style.padding = '10px';
+      }
+    }
+  }
+
+  // 3. BLOQUEIO SE HOUVER FALTAS
+  if (faltantes.length > 0) {
+    if (statusEl) {
+      statusEl.style.display = 'block';
+      statusEl.style.backgroundColor = '#F0E4E4';
+      statusEl.style.color = '#A84848';
+      statusEl.textContent = `⚠️ Faltam ${faltantes.length} respostas. As perguntas marcadas em vermelho precisam ser preenchidas.`;
+    }
+    // Rola a tela até a primeira pergunta faltante para facilitar
+    const primeiraFaltante = document.getElementById(`question-container-${faltantes[0]}`);
+    if (primeiraFaltante) primeiraFaltante.scrollIntoView({ behavior: 'smooth', block: 'center' });
+    return;
+  }
+
+  // 4. SE ESTIVER TUDO OK, ENVIA PARA O SUPABASE
+  if (btnEnviar) { btnEnviar.disabled = true; btnEnviar.textContent = 'Sincronizando...'; }
+  
+  const nomeVal = document.getElementById('patientName')?.value || document.getElementById('pNome')?.value || 'Paciente';
+  const idadeVal = document.getElementById('patientAge')?.value || document.getElementById('pidade')?.value || '-';
 
   try {
     const response = await fetch('https://nyelqgsqpqoasywdioxi.supabase.co/rest/v1/clientes', {
@@ -1155,29 +1186,20 @@ async function sendResults() {
       },
       body: JSON.stringify({
         nome_completo: nomeVal,
-        anotacoes: "Idade: " + idadeVal + " | Profissão: " + profVal,
-        origem: "Inventário de Esquemas",
-        resultados_teste: { 
-            dominios: typeof scoresText !== 'undefined' ? scoresText : 'Ver PDF',
-            data_teste: "27/02/2026"
-        }
+        anotacoes: `Idade: ${idadeVal} | Origem: Inventário Online`,
+        resultados_teste: { dominios: scoresText, total_respondido: totalNecessario }
       })
     });
 
-    if (!response.ok) throw new Error('Erro na conexão');
-
-    if (statusEl) {
-        statusEl.style.color = '#687C5A';
-        statusEl.textContent = '✅ Sucesso! O diagnóstico já está no seu prontuário digital.';
+    if (response.ok) {
+      statusEl.style.backgroundColor = '#E8F0E4';
+      statusEl.style.color = '#687C5A';
+      statusEl.textContent = '✅ Sucesso! Seu diagnóstico foi enviado para a Dra. Cleo.';
+      btnEnviar.textContent = 'Enviado ✔';
     }
-    if (btnEnviar) btnEnviar.textContent = 'Enviado ✔';
-    
   } catch (err) {
-    if (statusEl) {
-        statusEl.style.color = '#A84848';
-        statusEl.textContent = '❌ Erro ao salvar. Por favor, use a opção de PDF.';
-    }
-    if (btnEnviar) { btnEnviar.disabled = false; btnEnviar.textContent = 'Tentar Novamente'; }
+    statusEl.textContent = '❌ Erro de rede. Por favor, tente novamente.';
+    btnEnviar.disabled = false;
   }
 }
 </script>
