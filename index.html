@@ -1132,16 +1132,16 @@ async function sendResults() {
   const statusEl = document.getElementById('sendStatus');
   const btnEnviar = document.getElementById('btn-enviar');
   
-  // Aqui buscamos os dados da Cleo ou de qualquer cliente:
-  const nome = document.getElementById('patientName')?.value || 'Não informado';
-  const idade = document.getElementById('patientAge')?.value || 'Não informada';
-  const prof = document.getElementById('patientProfession')?.value || 'Não informada';
+  // 1. Captura inteligente: procura por 'patientName' ou 'pNome'
+  const nomeVal = document.getElementById('patientName')?.value || document.getElementById('pNome')?.value || 'Cleo (Teste)';
+  const idadeVal = document.getElementById('patientAge')?.value || document.getElementById('pidade')?.value || 'Não informada';
+  const profVal = document.getElementById('patientProfession')?.value || 'Não informada';
 
-  if (btnEnviar) { btnEnviar.disabled = true; btnEnviar.textContent = 'Enviando...'; }
+  if (btnEnviar) { btnEnviar.disabled = true; btnEnviar.textContent = 'Sincronizando...'; }
   if (statusEl) { 
       statusEl.style.display = 'block'; 
       statusEl.style.color = '#4A2F26';
-      statusEl.textContent = 'Sincronizando com o Consultório Virtual...'; 
+      statusEl.textContent = 'Enviando para o seu Consultório Virtual...'; 
   }
 
   try {
@@ -1154,29 +1154,28 @@ async function sendResults() {
         'Prefer': 'return=minimal'
       },
       body: JSON.stringify({
-        nome_completo: nome,
-        anotacoes: "Idade: " + idade + " | Profissão: " + prof,
+        nome_completo: nomeVal,
+        anotacoes: "Idade: " + idadeVal + " | Profissão: " + profVal,
         origem: "Inventário de Esquemas",
         resultados_teste: { 
             dominios: typeof scoresText !== 'undefined' ? scoresText : 'Ver PDF',
-            total: typeof answers !== 'undefined' ? Object.keys(answers).length : 0
+            data_teste: "27/02/2026"
         }
       })
     });
 
-    if (!response.ok) throw new Error('Erro na rede');
+    if (!response.ok) throw new Error('Erro na conexão');
 
     if (statusEl) {
         statusEl.style.color = '#687C5A';
-        statusEl.textContent = '✅ Sucesso! O seu diagnóstico já está no prontuário da Dra. Cleo.';
+        statusEl.textContent = '✅ Sucesso! O diagnóstico já está no seu prontuário digital.';
     }
     if (btnEnviar) btnEnviar.textContent = 'Enviado ✔';
     
   } catch (err) {
-    console.error(err);
     if (statusEl) {
         statusEl.style.color = '#A84848';
-        statusEl.textContent = '❌ Erro de conexão. Por favor, salve o PDF abaixo.';
+        statusEl.textContent = '❌ Erro ao salvar. Por favor, use a opção de PDF.';
     }
     if (btnEnviar) { btnEnviar.disabled = false; btnEnviar.textContent = 'Tentar Novamente'; }
   }
