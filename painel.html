@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="pt-BR">
 <head>
@@ -212,13 +211,12 @@
     }
   }
 
-  // 3. Função Mágica: Buscar dados reais no Supabase
+ // 3. Função Mágica: Buscar dados reais no Supabase
   async function loadPatients() {
     const tbody = document.getElementById('patients-tbody');
     tbody.innerHTML = '<tr><td colspan="4" class="status-loading">Buscando registros...</td></tr>';
 
     try {
-      // Usando sua URL e Chave exatas do Inventário
       const response = await fetch('https://nyelqgsqpqoasywdioxi.supabase.co/rest/v1/clientes?select=*&order=created_at.desc', {
         method: 'GET',
         headers: {
@@ -228,7 +226,11 @@
         }
       });
 
-      if (!response.ok) throw new Error('Falha na comunicação');
+      // NOVO: Se der erro, ele vai ler o motivo exato do Supabase
+      if (!response.ok) {
+        const erroDetalhado = await response.text();
+        throw new Error(`Código ${response.status}: ${erroDetalhado}`);
+      }
       
       const data = await response.json();
 
@@ -237,25 +239,22 @@
         return;
       }
 
-      // Limpar a tabela e preencher com os dados reais
       tbody.innerHTML = '';
       data.forEach(paciente => {
-        // Formatar a data (ex: 24/10/2025)
         const dataFormatada = new Date(paciente.created_at).toLocaleDateString('pt-BR');
-        
-        // Criar a linha da tabela
         tbody.innerHTML += `
           <tr>
             <td style="font-weight: 500;">${paciente.nome_completo || 'Não informado'}</td>
             <td><span class="service-tag tag-diagnostico">${paciente.origem || 'Inventário'}</span></td>
             <td>${dataFormatada}</td>
-            <td><button class="btn-outline" onclick="alert('No próximo passo, este botão abrirá os gráficos da paciente!')">Abrir Ficha</button></td>
+            <td><button class="btn-outline">Abrir Ficha</button></td>
           </tr>
         `;
       });
 
     } catch (error) {
-      tbody.innerHTML = `<tr><td colspan="4" class="status-loading" style="color: var(--error-red);">Erro ao carregar dados. Verifique a conexão.</td></tr>`;
+      // NOVO: Mostra o erro real em vermelho na tabela
+      tbody.innerHTML = `<tr><td colspan="4" class="status-loading" style="color: var(--error-red);">Opa! O sistema disse: ${error.message}</td></tr>`;
     }
   }
 </script>
