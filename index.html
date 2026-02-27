@@ -670,25 +670,14 @@
   <div class="email-section">
     <h3>📨 Enviar resultado ao terapeuta</h3>
     <p>
-      <div class="send-section" style="text-align: center; margin-top: 40px; padding: 30px; border-top: 1px solid #E2DAD0; background-color: #F7F4EF;">
-    <h3 style="color: #4A2F26; font-family: 'Cormorant Garamond', serif; font-size: 26px; margin-bottom: 10px;">
-        Finalizar e Enviar
-    </h3>
-    <p style="color: #6B4A42; font-size: 15px; margin-bottom: 25px;">
-        Seus dados estão protegidos por sigilo terapêutico. Clique abaixo para enviar seus resultados diretamente para a análise da terapeuta.
-    </p>
-    
-<div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
-        <button id="btn-enviar" onclick="sendResults()" style="background-color: #4A2F26; color: #F7F4EF; padding: 14px 28px; border: none; cursor: pointer; font-weight: 500; font-size: 14px; transition: 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
-            Enviar Resultados
-        </button>
-        
-        <button onclick="window.print()" style="background-color: transparent; color: #4A2F26; padding: 14px 28px; border: 1px solid #4A2F26; cursor: pointer; font-weight: 500; font-size: 14px; transition: 0.3s;">
-            🖨️ Salvar como PDF
-        </button>
+     <div class="send-section" style="text-align: center; margin-top: 40px; padding: 30px; border-top: 1px solid #E2DAD0; background-color: #F7F4EF;">
+    <h3 style="color: #4A2F26; font-family: 'Cormorant Garamond', serif; font-size: 26px; margin-bottom: 10px;">Finalizar e Enviar</h3>
+    <p style="color: #6B4A42; font-size: 15px; margin-bottom: 25px;">Seus dados estão protegidos por sigilo terapêutico. Clique abaixo para enviar seus resultados diretamente para a análise da terapeuta.</p>
+    <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+        <button id="btn-enviar" onclick="sendResults()" style="background-color: #4A2F26; color: #F7F4EF; padding: 14px 28px; border: none; cursor: pointer; font-weight: 500; font-size: 14px;">Enviar Resultados</button>
+        <button onclick="window.print()" style="background-color: transparent; color: #4A2F26; padding: 14px 28px; border: 1px solid #4A2F26; cursor: pointer; font-weight: 500; font-size: 14px;">🖨️ Salvar como PDF</button>
     </div>
-
-    <div id="sendStatus" class="send-status" style="display: none; margin-top: 20px; font-size: 14px; padding: 12px; border-radius: 4px;"></div>
+    <div id="sendStatus" style="display: none; margin-top: 20px; font-size: 14px; padding: 12px; border-radius: 4px;"></div>
 </div>
 
 <!-- EmailJS SDK -->
@@ -1142,138 +1131,36 @@ function showResults() {
 async function sendResults() {
   const statusEl = document.getElementById('sendStatus');
   const btnEnviar = document.getElementById('btn-enviar');
-  
-  // Pegando os dados de nome, idade e profissão que a cliente digitou no topo da página
-  const nome = document.getElementById('patientName') ? document.getElementById('patientName').value : 'Não informado';
-  const idade = document.getElementById('patientAge') ? document.getElementById('patientAge').value : 'Não informada';
-  const prof = document.getElementById('patientProfession') ? document.getElementById('patientProfession').value : 'Não informada';
-
-  if (btnEnviar) {
-      btnEnviar.disabled = true;
-      btnEnviar.textContent = 'Enviando...';
-  }
-  
-  if (statusEl) {
-      statusEl.style.display = 'block';
-      statusEl.style.backgroundColor = '#F0EDE7';
-      statusEl.style.color = '#4A2F26';
-      statusEl.textContent = 'Conectando ao Consultório Virtual...';
-  }
-
-  const SUPABASE_URL = 'https://nyelqgsqpqoasywdioxi.supabase.co/rest/v1/clientes';
-  const SUPABASE_KEY = 'sb_publishable_IVMMnw4_9uF4C6-RBiElUg_lvIq8JRX';
+  if (btnEnviar) { btnEnviar.disabled = true; btnEnviar.textContent = 'Enviando...'; }
+  if (statusEl) { statusEl.style.display = 'block'; statusEl.textContent = 'Conectando ao banco de dados...'; }
 
   try {
-    const response = await fetch(SUPABASE_URL, {
+    const nome = document.getElementById('patientName')?.value || 'Não informado';
+    const idade = document.getElementById('patientAge')?.value || 'Não informada';
+    const prof = document.getElementById('patientProfession')?.value || 'Não informada';
+
+    const response = await fetch('https://nyelqgsqpqoasywdioxi.supabase.co/rest/v1/clientes', {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',
-        'apikey': SUPABASE_KEY,
-        'Authorization': 'Bearer ' + SUPABASE_KEY,
+        'apikey': 'sb_publishable_IVMMnw4_9uF4C6-RBiElUg_lvIq8JRX',
+        'Authorization': 'Bearer sb_publishable_IVMMnw4_9uF4C6-RBiElUg_lvIq8JRX',
         'Prefer': 'return=minimal'
       },
       body: JSON.stringify({
         nome_completo: nome,
-        anotacoes: "Idade: " + idade + " | Profissão: " + prof,
+        anotacoes: `Idade: ${idade} | Profissão: ${prof}`,
         origem: "Inventário de Esquemas",
-        resultados_teste: {
-          dominios: typeof scoresText !== 'undefined' ? scoresText : 'Processado',
-          respostas_completas: typeof answersText !== 'undefined' ? answersText : 'Processado',
-          total_respondido: typeof answers !== 'undefined' ? Object.keys(answers).length + '/212' : 'Concluído'
-        }
+        resultados_teste: { dominios: typeof scoresText !== 'undefined' ? scoresText : 'Ver PDF' }
       })
     });
 
-    if (!response.ok) {
-      const err = await response.text();
-      throw new Error(err);
-    }
-    
-    if (statusEl) {
-        statusEl.style.backgroundColor = '#E8F0E4';
-        statusEl.style.color = '#687C5A';
-        statusEl.textContent = '✅ Resultado salvo com sucesso direto no seu Prontuário!';
-    }
-    if (btnEnviar) btnEnviar.textContent = 'Enviado ✔';
-    
+    if (!response.ok) throw new Error('Erro no envio');
+    if (statusEl) { statusEl.style.color = '#687C5A'; statusEl.textContent = '✅ Sucesso! Dados salvos no seu prontuário.'; }
   } catch (err) {
-    console.error(err);
-    if (statusEl) {
-        statusEl.style.backgroundColor = '#F0E4E4';
-        statusEl.style.color = '#A84848';
-        statusEl.textContent = '❌ Erro ao salvar. Por favor, tente novamente ou avise a terapeuta.';
-    }
-    if (btnEnviar) {
-        btnEnviar.disabled = false;
-        btnEnviar.textContent = 'Enviar Resultados';
-    }
+    if (statusEl) { statusEl.style.color = '#A84848'; statusEl.textContent = '❌ Erro ao salvar. Use o botão de PDF.'; }
+    if (btnEnviar) { btnEnviar.disabled = false; btnEnviar.textContent = 'Enviar Resultados'; }
   }
-}
-
-  const nome = document.getElementById('pNome').value || 'Não informado';
-  const idade = document.getElementById('pIdade').value || 'Não informado';
-  const data = document.getElementById('pData').value || '';
-  const prof = document.getElementById('pProfissao').value || 'Não informado';
-  const dataFmt = data ? new Date(data + 'T12:00:00').toLocaleDateString('pt-BR') : 'Não informado';
-
-  // Build domain scores text
-  let scoresText = '';
-  domains.forEach(domain => {
-    const qs = domain.questions.filter(q => answers[q] !== undefined);
-    if (qs.length === 0) {
-      scoresText += `${domain.name}: Não respondido\n`;
-    } else {
-      const total = qs.reduce((sum, q) => sum + answers[q], 0);
-      const avg = (total / qs.length).toFixed(2);
-      scoresText += `${domain.name}: ${avg}/6 (${qs.length} questões)\n`;
-    }
-  });
-
-  // Build all answers text
-  let answersText = '';
-  allQuestions.forEach(q => {
-    answersText += `Q${q[0]}: ${answers[q[0]] || 'S/R'} | `;
-  });
-
-statusEl.className = 'send-status';
-  statusEl.textContent = 'Enviando para o Consultório Virtual...';
-  statusEl.style.display = 'block';
-
-  const SUPABASE_URL = 'https://nyelqgsqpqoasywdioxi.supabase.co/rest/v1/clientes';
-  const SUPABASE_KEY = 'sb_publishable_IVMMnw4_9uF4C6-RBiElUg_lvIq8JRX';
-
-  fetch(SUPABASE_URL, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'apikey': SUPABASE_KEY,
-      'Authorization': 'Bearer ' + SUPABASE_KEY,
-      'Prefer': 'return=minimal'
-    },
-    body: JSON.stringify({
-      nome_completo: nome,
-      anotacoes: "Email: " + email + " | Idade: " + idade + " | Profissão: " + prof,
-      origem: "Inventário de Esquemas",
-      resultados_teste: {
-        dominios: scoresText,
-        respostas_completas: answersText,
-        total_respondido: Object.keys(answers).length + '/212'
-      }
-    })
-  })
-  .then(async response => {
-    if (!response.ok) {
-      const err = await response.text();
-      throw new Error(err);
-    }
-    statusEl.className = 'send-status success';
-    statusEl.textContent = '✅ Resultado salvo com sucesso direto no seu Prontuário!';
-  })
-  .catch(err => {
-    console.error(err);
-    statusEl.className = 'send-status error';
-    statusEl.textContent = '❌ Erro ao salvar. Por favor, tente novamente ou avise a terapeuta.';
-  });
 }
 </script>
 </body>
