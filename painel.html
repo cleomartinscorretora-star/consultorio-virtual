@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Painel da Terapeuta - Cleo Martins</title>
+<title>Consultório Virtual - Cleo Martins</title>
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
   :root {
@@ -13,59 +13,64 @@
     --text-light: #7A6560;
     --card-bg: #FFFFFF;
     --border-color: #E4DDD5;
-    --accent: #C38A6B; /* Terracotta */
-    --success: #687C5A; /* Verde suave */
+    --accent: #C38A6B; 
+    --success: #687C5A; /* Sálvia suave para sucesso/concluído */
   }
 
   * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'DM Sans', sans-serif; }
   body { background-color: var(--bg-color); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
 
   /* --- MENU LATERAL (SIDEBAR) --- */
-  .sidebar { width: 260px; background-color: var(--sidebar-bg); color: #FFF; display: flex; flex-direction: column; padding: 30px 20px; }
-  .logo-area { text-align: center; margin-bottom: 40px; }
-  .logo-area h2 { font-family: 'Lora', serif; font-size: 22px; font-weight: 600; letter-spacing: 1px; color: #F7F4EF; }
-  .logo-area span { font-size: 12px; color: #D9AA90; text-transform: uppercase; letter-spacing: 2px; }
+  .sidebar { width: 260px; background-color: var(--sidebar-bg); color: #FFF; display: flex; flex-direction: column; padding: 40px 0; border-right: 1px solid rgba(255,255,255,0.1); }
+  .logo-area { text-align: center; margin-bottom: 50px; padding: 0 20px; }
+  .logo-area h2 { font-family: 'Lora', serif; font-size: 22px; font-weight: 400; letter-spacing: 1px; color: #F7F4EF; margin-bottom: 4px; }
+  .logo-area span { font-size: 10px; color: #D9AA90; text-transform: uppercase; letter-spacing: 3px; font-weight: 500; }
   
-  .nav-menu { display: flex; flex-direction: column; gap: 10px; }
-  .nav-item { padding: 14px 20px; border-radius: 10px; color: #E4DDD5; text-decoration: none; font-size: 15px; font-weight: 500; transition: 0.3s; display: flex; align-items: center; gap: 12px; cursor: pointer; }
-  .nav-item:hover, .nav-item.active { background-color: rgba(255,255,255,0.1); color: #FFF; }
+  .nav-menu { display: flex; flex-direction: column; }
+  .nav-item { padding: 16px 30px; color: #D4C8C2; text-decoration: none; font-size: 14px; font-weight: 400; transition: all 0.3s ease; cursor: pointer; border-left: 3px solid transparent; letter-spacing: 0.5px; }
+  .nav-item:hover, .nav-item.active { background-color: rgba(255,255,255,0.05); color: #FFF; border-left-color: #D9AA90; }
 
   /* --- ÁREA PRINCIPAL --- */
-  .main-content { flex: 1; padding: 40px 50px; overflow-y: auto; }
+  .main-content { flex: 1; padding: 50px 60px; overflow-y: auto; }
   
-  .header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 40px; }
-  .header h1 { font-family: 'Lora', serif; font-size: 32px; color: var(--text-main); }
-  .date-display { font-size: 14px; color: var(--text-light); font-weight: 500; }
+  .header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 50px; border-bottom: 1px solid var(--border-color); padding-bottom: 20px; }
+  .header h1 { font-family: 'Lora', serif; font-size: 34px; color: var(--text-main); font-weight: 400; }
+  .date-display { font-size: 13px; color: var(--text-light); font-weight: 400; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
 
-  /* --- CARDS DE RESUMO (CAIXA E AGENDA) --- */
-  .dashboard-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-bottom: 40px; }
-  .card { background-color: var(--card-bg); padding: 24px; border-radius: 16px; border: 1px solid var(--border-color); box-shadow: 0 4px 12px rgba(74,47,38,0.04); }
-  .card-title { font-size: 13px; text-transform: uppercase; color: var(--text-light); font-weight: 600; margin-bottom: 10px; display: flex; justify-content: space-between; }
-  .card-value { font-family: 'Lora', serif; font-size: 32px; font-weight: 600; color: var(--text-main); }
-  .card-subtitle { font-size: 12px; color: var(--success); font-weight: 500; margin-top: 8px; }
+  /* --- CARDS DE RESUMO --- */
+  .dashboard-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-bottom: 50px; }
+  .card { background-color: var(--card-bg); padding: 30px; border-radius: 12px; border: 1px solid var(--border-color); }
+  .card-title { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-light); font-weight: 500; margin-bottom: 16px; }
+  .card-value { font-family: 'Lora', serif; font-size: 36px; font-weight: 400; color: var(--text-main); line-height: 1; }
+  .card-subtitle { font-size: 12px; color: var(--success); font-weight: 400; margin-top: 12px; }
 
   /* --- AGENDA DO DIA --- */
-  .section-title { font-family: 'Lora', serif; font-size: 20px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; }
-  .btn-new { background-color: var(--accent); color: #FFF; border: none; padding: 10px 20px; border-radius: 8px; font-size: 13px; font-weight: 600; cursor: pointer; transition: 0.2s; }
-  .btn-new:hover { background-color: #A37055; }
+  .section-title { font-family: 'Lora', serif; font-size: 22px; margin-bottom: 24px; font-weight: 400; display: flex; justify-content: space-between; align-items: center; color: var(--text-main); }
+  .btn-new { background-color: var(--sidebar-bg); color: #FFF; border: none; padding: 12px 24px; border-radius: 8px; font-size: 12px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: background-color 0.3s; }
+  .btn-new:hover { background-color: #321f18; }
 
-  .agenda-list { background-color: var(--card-bg); border-radius: 16px; border: 1px solid var(--border-color); padding: 10px 24px; }
-  .agenda-item { display: flex; align-items: center; justify-content: space-between; padding: 20px 0; border-bottom: 1px solid var(--border-color); }
+  .agenda-list { background-color: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); padding: 0 30px; }
+  .agenda-item { display: flex; align-items: center; justify-content: space-between; padding: 24px 0; border-bottom: 1px solid var(--border-color); }
   .agenda-item:last-child { border-bottom: none; }
   
-  .time-block { width: 80px; font-weight: 600; color: var(--text-main); font-size: 15px; }
+  .time-block { width: 90px; font-family: 'Lora', serif; color: var(--text-main); font-size: 18px; }
   .patient-info { flex: 1; }
-  .patient-name { font-weight: 600; font-size: 16px; margin-bottom: 4px; }
-  .service-tag { display: inline-block; padding: 4px 10px; border-radius: 6px; font-size: 11px; font-weight: 600; text-transform: uppercase; }
+  .patient-name { font-weight: 500; font-size: 16px; margin-bottom: 6px; color: var(--text-main); }
+  .service-tag { display: inline-block; padding: 4px 12px; border-radius: 4px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
   
-  /* Cores das Categorias que definimos */
-  .tag-diagnostico { background-color: #FDF3E1; color: #B07D2B; } /* Sessão de Clareza, Tarot */
-  .tag-tratamento { background-color: #F0EBE6; color: var(--sidebar-bg); } /* Mentoria DNA Feminino */
-  .tag-limpeza { background-color: #E8F0E4; color: var(--success); } /* Mesa Quântica, Radiestesia */
+  /* Cores minimalistas das Categorias */
+  .tag-diagnostico { background-color: #FDF3E1; color: #9A6D26; } 
+  .tag-tratamento { background-color: #F0EBE6; color: var(--sidebar-bg); } 
+  .tag-limpeza { background-color: #E8F0E4; color: var(--success); } 
 
-  .action-buttons { display: flex; gap: 10px; }
-  .btn-outline { background: transparent; border: 1px solid var(--border-color); padding: 8px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; color: var(--text-light); cursor: pointer; transition: 0.2s; }
+  .action-buttons { display: flex; gap: 12px; }
+  .btn-outline { background: transparent; border: 1px solid var(--border-color); padding: 10px 20px; border-radius: 6px; font-size: 12px; font-weight: 500; color: var(--text-light); cursor: pointer; transition: all 0.3s; }
   .btn-outline:hover { border-color: var(--sidebar-bg); color: var(--sidebar-bg); }
+  .btn-action-primary { border-color: var(--accent); color: var(--accent); }
+  .btn-action-primary:hover { background-color: var(--accent); color: #FFF; }
+  .btn-success { border-color: var(--success); color: var(--success); }
+  .btn-success:hover { background-color: var(--success); color: #FFF; }
+
 </style>
 </head>
 <body>
@@ -73,15 +78,15 @@
   <div class="sidebar">
     <div class="logo-area">
       <h2>Cleo Martins</h2>
-      <span>Consultório Virtual</span>
+      <span>Consultório Digital</span>
     </div>
     <div class="nav-menu">
-      <a class="nav-item active">📊 Painel Geral</a>
-      <a class="nav-item">🗓️ Minha Agenda</a>
-      <a class="nav-item">📁 Pacientes & Prontuários</a>
-      <a class="nav-item">🔗 Links & Anamnese</a>
-      <a class="nav-item">💰 Financeiro & Caixa</a>
-      <a class="nav-item" style="margin-top: 20px; opacity: 0.7;">⚙️ Configurações</a>
+      <a class="nav-item active">Painel Geral</a>
+      <a class="nav-item">Minha Agenda</a>
+      <a class="nav-item">Pacientes & Prontuários</a>
+      <a class="nav-item">Links & Triagem</a>
+      <a class="nav-item">Gestão Financeira</a>
+      <a class="nav-item" style="margin-top: 30px; opacity: 0.6;">Configurações</a>
     </div>
   </div>
 
@@ -90,31 +95,31 @@
     <div class="header">
       <div>
         <div class="date-display" id="dataAtual">Carregando data...</div>
-        <h1>Bom dia, Cleo!</h1>
+        <h1>Bom dia, Cleo.</h1>
       </div>
     </div>
 
     <div class="dashboard-cards">
       <div class="card">
-        <div class="card-title">Atendimentos Hoje <span>👩‍💻</span></div>
+        <div class="card-title">Atendimentos Hoje</div>
         <div class="card-value">3</div>
-        <div class="card-subtitle">2 novos diagnósticos</div>
+        <div class="card-subtitle">2 novos diagnósticos agendados</div>
       </div>
       <div class="card">
-        <div class="card-title">Caixa do Dia <span>💰</span></div>
+        <div class="card-title">Caixa do Dia</div>
         <div class="card-value">R$ 381,00</div>
-        <div class="card-subtitle">Sessões avulsas (R$ 127)</div>
+        <div class="card-subtitle">Referente a sessões de triagem</div>
       </div>
       <div class="card">
-        <div class="card-title">Caixa do Mês <span>📈</span></div>
+        <div class="card-title">Caixa do Mês</div>
         <div class="card-value">R$ 4.250,00</div>
-        <div class="card-subtitle" style="color: var(--accent);">Visualizar Relatório Completo →</div>
+        <div class="card-subtitle" style="color: var(--accent); cursor: pointer;">Acessar relatório detalhado</div>
       </div>
     </div>
 
     <div class="section-title">
-      Agenda de Hoje
-      <button class="btn-new">+ Novo Agendamento</button>
+      Agenda Clínica
+      <button class="btn-new">Novo Agendamento</button>
     </div>
     
     <div class="agenda-list">
@@ -125,8 +130,8 @@
           <span class="service-tag tag-diagnostico">Sessão de Clareza</span>
         </div>
         <div class="action-buttons">
-          <button class="btn-outline">Abrir Prontuário</button>
-          <button class="btn-outline" style="color: var(--accent); border-color: var(--accent);">Finalizar & Gerar Caixa</button>
+          <button class="btn-outline">Prontuário</button>
+          <button class="btn-outline btn-action-primary">Finalizar & Gerar Caixa</button>
         </div>
       </div>
 
@@ -134,11 +139,11 @@
         <div class="time-block">16:30</div>
         <div class="patient-info">
           <div class="patient-name">Juliana Costa</div>
-          <span class="service-tag tag-tratamento">Mentoria DNA Feminino (2/5)</span>
+          <span class="service-tag tag-tratamento">Mentoria DNA Feminino</span>
         </div>
         <div class="action-buttons">
-          <button class="btn-outline">Ver Evolução</button>
-          <button class="btn-outline">✅ Concluído</button>
+          <button class="btn-outline">Evolução</button>
+          <button class="btn-outline btn-success">Concluído</button>
         </div>
       </div>
 
@@ -146,11 +151,11 @@
         <div class="time-block">18:00</div>
         <div class="patient-info">
           <div class="patient-name">Roberta Almeida</div>
-          <span class="service-tag tag-limpeza">Leitura + Mesa Quântica</span>
+          <span class="service-tag tag-limpeza">Mesa Quântica</span>
         </div>
         <div class="action-buttons">
-          <button class="btn-outline">Abrir Prontuário</button>
-          <button class="btn-outline">✅ Concluído</button>
+          <button class="btn-outline">Prontuário</button>
+          <button class="btn-outline btn-success">Concluído</button>
         </div>
       </div>
     </div>
@@ -158,10 +163,9 @@
   </div>
 
 <script>
-  // Script simples para colocar a data de hoje na tela
   const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
   const dataFormatada = new Date().toLocaleDateString('pt-BR', options);
-  document.getElementById('dataAtual').textContent = dataFormatada.charAt(0).toUpperCase() + dataFormatada.slice(1);
+  document.getElementById('dataAtual').textContent = dataFormatada;
 </script>
 </body>
 </html>
