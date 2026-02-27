@@ -41,10 +41,9 @@
   /* --- VISUALIZAÇÕES (Telas alternáveis) --- */
   .view-section { display: none; animation: fadeIn 0.4s ease; }
   .view-section.active { display: block; }
-
   @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-  /* --- CARDS DE RESUMO (Dashboard) --- */
+  /* --- CARDS DE RESUMO --- */
   .dashboard-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-bottom: 50px; }
   .card { background-color: var(--card-bg); padding: 30px; border-radius: 12px; border: 1px solid var(--border-color); }
   .card-title { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-light); font-weight: 500; margin-bottom: 16px; }
@@ -67,7 +66,6 @@
   
   .tag-diagnostico { background-color: #FDF3E1; color: #9A6D26; } 
   .tag-tratamento { background-color: #F0EBE6; color: var(--sidebar-bg); } 
-  .tag-limpeza { background-color: #E8F0E4; color: var(--success); } 
 
   .action-buttons { display: flex; gap: 12px; }
   .btn-outline { background: transparent; border: 1px solid var(--border-color); padding: 10px 20px; border-radius: 6px; font-size: 12px; font-weight: 500; color: var(--text-light); cursor: pointer; transition: all 0.3s; }
@@ -78,10 +76,26 @@
   .patient-table { width: 100%; border-collapse: collapse; text-align: left; }
   .patient-table th { padding: 20px 30px; font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-light); border-bottom: 1px solid var(--border-color); background-color: #FCFAFA; }
   .patient-table td { padding: 24px 30px; font-size: 14px; border-bottom: 1px solid var(--border-color); color: var(--text-main); }
-  .patient-table tr:last-child td { border-bottom: none; }
   .patient-table tr:hover td { background-color: #FCFAFA; }
-
   .status-loading { padding: 40px; text-align: center; color: var(--text-light); font-style: italic; }
+
+  /* --- MODAL (Ficha Flutuante) --- */
+  .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(74,47,38,0.3); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(3px); }
+  .modal-overlay.active { display: flex; animation: fadeIn 0.3s ease; }
+  .modal-content { background: var(--bg-color); width: 90%; max-width: 650px; max-height: 85vh; border-radius: 16px; padding: 40px; overflow-y: auto; position: relative; box-shadow: 0 10px 40px rgba(0,0,0,0.1); border: 1px solid var(--border-color); }
+  .btn-close { position: absolute; top: 25px; right: 30px; font-size: 28px; cursor: pointer; color: var(--text-light); background: none; border: none; transition: 0.2s; }
+  .btn-close:hover { color: var(--text-main); }
+  
+  .ficha-header { margin-bottom: 30px; border-bottom: 1px solid var(--border-color); padding-bottom: 20px; }
+  .ficha-title { font-family: 'Lora', serif; font-size: 28px; color: var(--text-main); margin-bottom: 8px; }
+  .ficha-subtitle { font-size: 12px; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px; }
+  
+  .ficha-box { background: var(--card-bg); padding: 20px; border-radius: 10px; border: 1px solid var(--border-color); margin-bottom: 24px; }
+  .ficha-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-light); margin-bottom: 8px; font-weight: 600; display: block; }
+  
+  .esquemas-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+  .esquema-item { background: var(--cream); padding: 12px 16px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 13px; display: flex; justify-content: space-between; align-items: center; }
+  .esquema-item strong { font-family: 'Lora', serif; font-size: 16px; color: var(--accent); }
 </style>
 </head>
 <body>
@@ -97,12 +111,10 @@
       <a class="nav-item" id="menu-patients" onclick="changeView('patients')">Pacientes & Prontuários</a>
       <a class="nav-item">Links & Triagem</a>
       <a class="nav-item">Gestão Financeira</a>
-      <a class="nav-item" style="margin-top: 30px; opacity: 0.6;">Configurações</a>
     </div>
   </div>
 
   <div class="main-content">
-    
     <div class="header">
       <div>
         <div class="date-display" id="dataAtual">Carregando data...</div>
@@ -112,112 +124,82 @@
 
     <div id="view-dashboard" class="view-section active">
       <div class="dashboard-cards">
-        <div class="card">
-          <div class="card-title">Atendimentos Hoje</div>
-          <div class="card-value">3</div>
-          <div class="card-subtitle">2 novos diagnósticos agendados</div>
-        </div>
-        <div class="card">
-          <div class="card-title">Caixa do Dia</div>
-          <div class="card-value">R$ 381,00</div>
-          <div class="card-subtitle">Referente a sessões de triagem</div>
-        </div>
-        <div class="card">
-          <div class="card-title">Caixa do Mês</div>
-          <div class="card-value">R$ 4.250,00</div>
-          <div class="card-subtitle" style="color: var(--accent); cursor: pointer;">Acessar relatório detalhado</div>
-        </div>
+        <div class="card"><div class="card-title">Atendimentos Hoje</div><div class="card-value">3</div><div class="card-subtitle">2 novos diagnósticos</div></div>
+        <div class="card"><div class="card-title">Caixa do Dia</div><div class="card-value">R$ 381,00</div><div class="card-subtitle">Sessões de triagem</div></div>
+        <div class="card"><div class="card-title">Caixa do Mês</div><div class="card-value">R$ 4.250,00</div><div class="card-subtitle" style="color: var(--accent);">Relatório detalhado</div></div>
       </div>
-
-      <div class="section-title">
-        Agenda Clínica
-        <button class="btn-new">Novo Agendamento</button>
-      </div>
-      
+      <div class="section-title">Agenda Clínica <button class="btn-new">Novo Agendamento</button></div>
       <div class="agenda-list">
         <div class="agenda-item">
           <div class="time-block">14:00</div>
-          <div class="patient-info">
-            <div class="patient-name">Mariana Silva</div>
-            <span class="service-tag tag-diagnostico">Sessão de Clareza</span>
-          </div>
-          <div class="action-buttons">
-            <button class="btn-outline">Prontuário</button>
-            <button class="btn-outline" style="border-color: var(--accent); color: var(--accent);">Finalizar & Gerar Caixa</button>
-          </div>
-        </div>
-        <div class="agenda-item">
-          <div class="time-block">16:30</div>
-          <div class="patient-info">
-            <div class="patient-name">Juliana Costa</div>
-            <span class="service-tag tag-tratamento">Mentoria DNA Feminino</span>
-          </div>
-          <div class="action-buttons">
-            <button class="btn-outline">Evolução</button>
-            <button class="btn-outline" style="border-color: var(--success); color: var(--success);">Concluído</button>
-          </div>
+          <div class="patient-info"><div class="patient-name">Mariana Silva</div><span class="service-tag tag-diagnostico">Sessão de Clareza</span></div>
+          <div class="action-buttons"><button class="btn-outline">Prontuário</button><button class="btn-outline" style="border-color: var(--accent); color: var(--accent);">Finalizar & Gerar Caixa</button></div>
         </div>
       </div>
     </div>
 
     <div id="view-patients" class="view-section">
-      <div class="section-title">
-        Arquivo Clínico
-        <button class="btn-new" onclick="loadPatients()">Atualizar Lista</button>
-      </div>
-
+      <div class="section-title">Arquivo Clínico <button class="btn-new" onclick="loadPatients()">Atualizar Lista</button></div>
       <div class="table-container">
         <table class="patient-table">
-          <thead>
-            <tr>
-              <th>Nome da Paciente</th>
-              <th>Origem</th>
-              <th>Data do Registro</th>
-              <th>Prontuário</th>
-            </tr>
-          </thead>
+          <thead><tr><th>Nome da Paciente</th><th>Origem</th><th>Data do Registro</th><th>Prontuário</th></tr></thead>
           <tbody id="patients-tbody">
             <tr><td colspan="4" class="status-loading">Conectando ao banco de dados seguro...</td></tr>
           </tbody>
         </table>
       </div>
     </div>
+  </div>
 
+  <div class="modal-overlay" id="modalFicha">
+    <div class="modal-content">
+      <button class="btn-close" onclick="fecharFicha()">&times;</button>
+      
+      <div class="ficha-header">
+        <h2 class="ficha-title" id="fichaNome">Nome da Paciente</h2>
+        <div class="ficha-subtitle" id="fichaOrigem">Origem: Inventário</div>
+      </div>
+
+      <div class="ficha-box">
+        <span class="ficha-label">Dados Preliminares</span>
+        <div id="fichaAnotacoes" style="font-size: 14px; color: var(--text-main); line-height: 1.6;">Idade: -- | Profissão: --</div>
+      </div>
+
+      <span class="ficha-label" style="margin-top: 30px;">Mapeamento de Esquemas (Domínios)</span>
+      <div class="esquemas-grid" id="fichaEsquemas">
+        </div>
+      
+      <div style="text-align: right; margin-top: 30px;">
+        <button class="btn-outline" onclick="window.print()">🖨️ Imprimir Ficha</button>
+      </div>
+    </div>
   </div>
 
 <script>
-  // 1. Configurar data atual
   const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
   document.getElementById('dataAtual').textContent = new Date().toLocaleDateString('pt-BR', options);
 
-  // 2. Função para alternar as telas (Navegação)
+  let pacientesGlobais = []; // Variável para guardar a lista e usar no Modal
+
   function changeView(viewName) {
-    // Esconder todas as telas
     document.querySelectorAll('.view-section').forEach(el => el.classList.remove('active'));
-    // Desmarcar todos os botões do menu
     document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-    
-    // Mostrar a tela certa e marcar o menu
     document.getElementById(`view-${viewName}`).classList.add('active');
     document.getElementById(`menu-${viewName}`).classList.add('active');
 
-    // Mudar o título principal lá no topo
     const pageTitle = document.getElementById('page-title');
-    if(viewName === 'dashboard') {
-      pageTitle.textContent = 'Bom dia, Cleo.';
-    } else if (viewName === 'patients') {
+    if(viewName === 'dashboard') pageTitle.textContent = 'Bom dia, Cleo.';
+    else if (viewName === 'patients') {
       pageTitle.textContent = 'Pacientes & Prontuários';
-      loadPatients(); // Chama a função de buscar no banco automaticamente
+      loadPatients();
     }
   }
 
-// 3. Função Mágica: Buscar dados reais no Supabase (CORRIGIDA)
   async function loadPatients() {
     const tbody = document.getElementById('patients-tbody');
     tbody.innerHTML = '<tr><td colspan="4" class="status-loading">Buscando registros...</td></tr>';
 
     try {
-      // Retiramos o "order=created_at.desc" que estava causando o bloqueio
       const response = await fetch('https://nyelqgsqpqoasywdioxi.supabase.co/rest/v1/clientes?select=*', {
         method: 'GET',
         headers: {
@@ -227,43 +209,66 @@
         }
       });
 
-      if (!response.ok) {
-        const erroDetalhado = await response.text();
-        throw new Error(`Código ${response.status}: ${erroDetalhado}`);
-      }
+      if (!response.ok) throw new Error("Erro na comunicação");
       
-      const data = await response.json();
+      let data = await response.json();
+      pacientesGlobais = data.reverse(); // Salva os dados na nossa variável
 
-      if (data.length === 0) {
+      if (pacientesGlobais.length === 0) {
         tbody.innerHTML = '<tr><td colspan="4" class="status-loading">Nenhum paciente registrado ainda.</td></tr>';
         return;
       }
 
       tbody.innerHTML = '';
-      
-      // Invertemos a ordem manualmente para a última paciente aparecer primeiro
-      data.reverse().forEach(paciente => {
-        // Tentamos buscar a data de onde ela existir
-        let dataFormatada = 'Recente';
-        if (paciente.created_at) {
-          dataFormatada = new Date(paciente.created_at).toLocaleDateString('pt-BR');
-        } else if (paciente.resultados_teste && paciente.resultados_teste.data) {
-          dataFormatada = paciente.resultados_teste.data;
-        }
+      pacientesGlobais.forEach((paciente, index) => {
+        let dataFormatada = paciente.created_at ? new Date(paciente.created_at).toLocaleDateString('pt-BR') : 'Recente';
 
         tbody.innerHTML += `
           <tr>
             <td style="font-weight: 500;">${paciente.nome_completo || 'Não informado'}</td>
             <td><span class="service-tag tag-diagnostico">${paciente.origem || 'Inventário'}</span></td>
             <td>${dataFormatada}</td>
-            <td><button class="btn-outline" onclick="alert('No próximo passo, este botão abrirá os gráficos da paciente!')">Abrir Ficha</button></td>
+            <td><button class="btn-outline" onclick="abrirFicha(${index})">Abrir Ficha</button></td>
           </tr>
         `;
       });
-
     } catch (error) {
-      tbody.innerHTML = `<tr><td colspan="4" class="status-loading" style="color: var(--error-red);">Opa! O sistema disse: ${error.message}</td></tr>`;
+      tbody.innerHTML = `<tr><td colspan="4" class="status-loading" style="color: var(--error-red);">Erro ao buscar dados.</td></tr>`;
     }
+  }
+
+  // --- FUNÇÕES DA FICHA (MODAL) ---
+  function abrirFicha(index) {
+    const paciente = pacientesGlobais[index];
+    
+    // 1. Preencher os textos básicos
+    document.getElementById('fichaNome').textContent = paciente.nome_completo || 'Sem Nome';
+    document.getElementById('fichaOrigem').textContent = `Origem: ${paciente.origem || 'Inventário'}`;
+    document.getElementById('fichaAnotacoes').textContent = paciente.anotacoes || 'Sem anotações complementares registradas.';
+
+    // 2. Preencher os esquemas quebradinhos bonitinhos
+    const esquemasContainer = document.getElementById('fichaEsquemas');
+    esquemasContainer.innerHTML = ''; // Limpa o anterior
+
+    if (paciente.resultados_teste && paciente.resultados_teste.dominios) {
+      // Separa aquele textão pelo símbolo |
+      const dominiosArr = paciente.resultados_teste.dominios.split(' | ');
+      dominiosArr.forEach(item => {
+        const partes = item.split(': ');
+        if(partes.length === 2) {
+          esquemasContainer.innerHTML += `<div class="esquema-item"><span>${partes[0]}</span> <strong>${partes[1]}</strong></div>`;
+        }
+      });
+    } else {
+      esquemasContainer.innerHTML = '<div style="grid-column: 1 / -1; color: var(--text-light); font-size: 13px;">Nenhum teste de esquema encontrado.</div>';
+    }
+
+    // 3. Mostra a janela flutuante
+    document.getElementById('modalFicha').classList.add('active');
+  }
+
+  function fecharFicha() {
+    document.getElementById('modalFicha').classList.remove('active');
   }
 </script>
 </body>
