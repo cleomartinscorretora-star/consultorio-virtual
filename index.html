@@ -670,17 +670,25 @@
   <div class="email-section">
     <h3>📨 Enviar resultado ao terapeuta</h3>
     <p>
-      Insira o e-mail do seu terapeuta abaixo para enviar os resultados. 
-      Os dados serão enviados de forma segura apenas ao endereço indicado.
+      <div class="send-section" style="text-align: center; margin-top: 40px; padding: 30px; border-top: 1px solid #E2DAD0; background-color: #F7F4EF;">
+    <h3 style="color: #4A2F26; font-family: 'Cormorant Garamond', serif; font-size: 26px; margin-bottom: 10px;">
+        Finalizar e Enviar
+    </h3>
+    <p style="color: #6B4A42; font-size: 15px; margin-bottom: 25px;">
+        Seus dados estão protegidos por sigilo terapêutico. Clique abaixo para enviar seus resultados diretamente para a análise da terapeuta.
     </p>
-    <div class="email-row">
-      <input type="email" id="therapistEmail" placeholder="email@terapeuta.com"/>
-      <button class="btn-send" onclick="sendResults()">Enviar resultados</button>
+    
+    <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+        <button id="btn-enviar" onclick="enviarParaConsultorio()" style="background-color: #4A2F26; color: #F7F4EF; padding: 14px 28px; border: none; cursor: pointer; font-weight: 500; font-size: 14px; transition: 0.3s; box-shadow: 0 2px 4px rgba(0,0,0,0.1);">
+            Enviar Resultados
+        </button>
+        
+        <button onclick="window.print()" style="background-color: transparent; color: #4A2F26; padding: 14px 28px; border: 1px solid #4A2F26; cursor: pointer; font-weight: 500; font-size: 14px; transition: 0.3s;">
+            🖨️ Salvar como PDF
+        </button>
     </div>
-    <div class="send-status" id="sendStatus"></div>
-    <button class="btn-print" onclick="window.print()">🖨️ Imprimir / Salvar como PDF</button>
-  </div>
-</div>
+
+    <div id="statusEl" class="send-status" style="display: none; margin-top: 20px; font-size: 14px; padding: 12px; border-radius: 4px;"></div>
 </div>
 
 <!-- EmailJS SDK -->
