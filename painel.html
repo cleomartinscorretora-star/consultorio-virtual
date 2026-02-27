@@ -270,4 +270,137 @@
     if (paciente.resultados_teste && paciente.resultados_teste.dominios && paciente.resultados_teste.dominios !== "Registo Manual (Sem Inventário)") {
       const dominiosArr = paciente.resultados_teste.dominios.split(' | ');
       dominiosArr.forEach(item => {
-        const partes = item.split(':
+        const partes = item.split(': ');
+        if(partes.length === 2) esquemasContainer.innerHTML += `<div class="esquema-item"><span>${partes[0]}</span> <strong>${partes[1]}</strong></div>`;
+      });
+    } else {
+      esquemasContainer.innerHTML = '<div style="grid-column: 1 / -1; color: var(--text-light); font-size: 13px;">Nenhum teste de esquema associado.</div>';
+    }
+
+    document.getElementById('modalFicha').classList.add('active');
+  }
+
+  function fecharFicha() { document.getElementById('modalFicha').classList.remove('active'); }
+
+  /* --- 3. EXCLUIR PACIENTE --- */
+  async function excluirPaciente() {
+    const paciente = pacientesGlobais[pacienteAtualIndex];
+    const confirmacao = confirm(`Tem certeza que deseja EXCLUIR PERMANENTEMENTE o prontuário de ${paciente.nome_completo}? Esta ação não pode ser desfeita.`);
+    
+    if(!confirmacao) return;
+
+    try {
+      const response = await fetch(`https://nyelqgsqpqoasywdioxi.supabase.co/rest/v1/clientes?id=eq.${paciente.id}`, {
+        method: 'DELETE',
+        headers: {
+          'apikey': 'sb_publishable_IVMMnw4_9uF4C6-RBiElUg_lvIq8JRX',
+          'Authorization': 'Bearer sb_publishable_IVMMnw4_9uF4C6-RBiElUg_lvIq8JRX'
+        }
+      });
+
+      if (!response.ok) throw new Error("Erro");
+      
+      alert("Ficha excluída com sucesso.");
+      fecharFicha();
+      loadPatients(); // Recarrega a tabela
+
+    } catch (error) {
+      alert("Ocorreu um erro ao tentar excluir. Tente novamente.");
+    }
+  }
+
+  /* --- 4. PREPARAR EDIÇÃO --- */
+  function abrirEdicao() {
+    const paciente = pacientesGlobais[pacienteAtualIndex];
+    fecharFicha(); // Fecha a ficha de leitura
+    
+    // Altera os títulos do Modal de Registo
+    document.getElementById('modalRegistoTitulo').textContent = "Editar Prontuário";
+    document.getElementById('modalRegistoSub').textContent = "Atualização de dados cadastrais";
+    document.getElementById('btnSalvarCad').textContent = "Salvar Alterações";
+    
+    // Preenche os campos com os dados atuais
+    document.getElementById('cadId').value = paciente.id;
+    document.getElementById('cadNome').value = paciente.nome_completo || '';
+    document.getElementById('cadOrigem').value = paciente.origem || 'Outros';
+
+    // Tenta extrair Idade, Profissão e Telefone do texto de "anotações"
+    let txt = paciente.anotacoes || '';
+    let idade = txt.match(/Idade:\s*([^|]*)/);
+    let prof = txt.match(/Profissão:\s*([^|]*)/);
+    let tel = txt.match(/Telefone:\s*([^|]*)/);
+
+    document.getElementById('cadIdade').value = idade ? idade[1].trim() : '';
+    document.getElementById('cadProfissao').value = prof ? prof[1].trim() : '';
+    document.getElementById('cadTelefone').value = tel ? tel[1].trim() : '';
+
+    document.getElementById('msgRegisto').style.display = 'none';
+    document.getElementById('modalRegisto').classList.add('active');
+  }
+
+  /* --- 5. SALVAR NOVO OU EDITAR --- */
+  function abrirModalRegisto() {
+    document.getElementById('formRegisto').reset();
+    document.getElementById('cadId').value = ''; // ID vazio significa que é NOVO
+    document.getElementById('modalRegistoTitulo').textContent = "Novo Prontuário";
+    document.getElementById('modalRegistoSub').textContent = "Abertura de ficha manual";
+    document.getElementById('btnSalvarCad').textContent = "Guardar Prontuário";
+    document.getElementById('msgRegisto').style.display = 'none';
+    document.getElementById('modalRegisto').classList.add('active');
+  }
+
+  function fecharModalRegisto() { document.getElementById('modalRegisto').classList.remove('active'); }
+
+  async function salvarPaciente(e) {
+    e.preventDefault();
+    const btn = document.getElementById('btnSalvarCad');
+    const msg = document.getElementById('msgRegisto');
+    btn.disabled = true; msg.style.display = 'block'; msg.style.color = 'var(--text-light)'; msg.textContent = 'Sincronizando...';
+
+    const id = document.getElementById('cadId').value;
+    const nome = document.getElementById('cadNome').value;
+    const telefone = document.getElementById('cadTelefone').value;
+    const idade = document.getElementById('cadIdade').value;
+    const profissao = document.getElementById('cadProfissao').value;
+    const origem = document.getElementById('cadOrigem').value;
+    const anotacoes = `Idade: ${idade || '--'} | Profissão: ${profissao || '--'} | Telefone: ${telefone || '--'}`;
+
+    const isEdit = id !== '';
+    const url = isEdit 
+      ? `https://nyelqgsqpqoasywdioxi.supabase.co/rest/v1/clientes?id=eq.${id}` 
+      : 'https://nyelqgsqpqoasywdioxi.supabase.co/rest/v1/clientes';
+    
+    const method = isEdit ? 'PATCH' : 'POST';
+
+    const bodyData = { nome_completo: nome, origem: origem, anotacoes: anotacoes };
+    if (!isEdit) bodyData.resultados_teste = { dominios: "Registo Manual (Sem Inventário)", data: new Date().toLocaleDateString('pt-BR') };
+
+    try {
+      const response = await fetch(url, {
+        method: method,
+        headers: {
+          'Content-Type': 'application/json',
+          'apikey': 'sb_publishable_IVMMnw4_9uF4C6-RBiElUg_lvIq8JRX',
+          'Authorization': 'Bearer sb_publishable_IVMMnw4_9uF4C6-RBiElUg_lvIq8JRX',
+          'Prefer': 'return=minimal'
+        },
+        body: JSON.stringify(bodyData)
+      });
+
+      if (!response.ok) throw new Error("Falha");
+
+      msg.style.color = 'var(--success)';
+      msg.textContent = isEdit ? '✅ Dados atualizados!' : '✅ Ficha criada!';
+      
+      setTimeout(() => { fecharModalRegisto(); loadPatients(); }, 1200);
+    } catch (err) {
+      msg.style.color = 'var(--error-red)';
+      msg.textContent = '❌ Erro ao salvar.';
+    } finally {
+      btn.disabled = false;
+      btn.textContent = isEdit ? "Salvar Alterações" : "Guardar Prontuário";
+    }
+  }
+</script>
+</body>
+</html>
