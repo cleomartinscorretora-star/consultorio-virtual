@@ -179,19 +179,18 @@
     document.getElementById('patients-tbody').innerHTML = pacientesGlobais.map((p, i) => `<tr><td>${p.nome_completo}</td><td>${p.origem||'Manual'}</td><td>${new Date(p.created_at).toLocaleDateString()}</td><td><button class="btn-outline" onclick="abrirFicha(${i})">Abrir</button></td></tr>`).join('');
   }
 
-  function abrirFicha(i) {
-    indexAtual = i; const p = pacientesGlobais[i];
-    document.getElementById('fichaNome').textContent = p.nome_completo;
-    document.getElementById('inputEvolucao').value = p.evolucao_clinica || '';
-    document.getElementById('conteudoAnamnese').textContent = p.anamnese || 'Nenhuma anamnese enviada ainda.';
+  // CONFIGURAÇÃO DO LINK (AJUSTADA PARA O SEU DOMÍNIO)
+    const btnLink = document.getElementById('btnCopiarLink');
     
-    // CONFIG BOTÃO LINK ANAMNESE
-    // Substitua 'SEU-SUBDOMINIO' pelo nome do seu site na Vercel
-    const siteUrl = window.location.origin; 
-    document.getElementById('btnCopiarLink').onclick = () => {
-      const link = `${siteUrl}/anamnese.html?id=${p.id}`;
-      navigator.clipboard.writeText(link);
-      alert('Link da Anamnese copiado! Envie para a paciente.');
+    btnLink.onclick = () => {
+      // Forçamos o link a usar o seu domínio oficial da Vercel
+      const linkCompleto = `https://inventario.cleomartins.site/anamnese.html?id=${p.id}`;
+      
+      navigator.clipboard.writeText(linkCompleto).then(() => {
+        alert('Perfeito, Cleo! Link da Anamnese copiado. Agora é só colar no WhatsApp da ' + p.nome_completo);
+      }).catch(err => {
+        prompt('Houve um bloqueio automático do navegador. Copie o link abaixo manualmente:', linkCompleto);
+      });
     };
 
     document.getElementById('modalFicha').classList.add('active');
