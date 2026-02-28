@@ -6,30 +6,20 @@
 <title>Consultório Virtual - Cleo Martins</title>
 <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,600;1,400&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg-color: #F7F4EF;
-    --sidebar-bg: #4A2F26;
-    --text-main: #4A2F26;
-    --text-light: #7A6560;
-    --card-bg: #FFFFFF;
-    --border-color: #E4DDD5;
-    --accent: #C38A6B; 
-    --success: #687C5A;
-    --error-red: #A84848;
-  }
+  :root { --bg-color: #F7F4EF; --sidebar-bg: #4A2F26; --text-main: #4A2F26; --text-light: #7A6560; --card-bg: #FFFFFF; --border-color: #E4DDD5; --accent: #C38A6B; --success: #687C5A; --error-red: #A84848; }
   * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'DM Sans', sans-serif; }
   body { background-color: var(--bg-color); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
 
-  /* --- SIDEBAR --- */
+  /* SIDEBAR */
   .sidebar { width: 260px; background-color: var(--sidebar-bg); color: #FFF; display: flex; flex-direction: column; padding: 40px 0; border-right: 1px solid rgba(255,255,255,0.1); }
   .logo-area { text-align: center; margin-bottom: 50px; padding: 0 20px; }
-  .logo-area h2 { font-family: 'Lora', serif; font-size: 22px; font-weight: 400; letter-spacing: 1px; color: #F7F4EF; }
+  .logo-area h2 { font-family: 'Lora', serif; font-size: 22px; color: #F7F4EF; margin-bottom: 4px; }
   .logo-area span { font-size: 10px; color: #D9AA90; text-transform: uppercase; letter-spacing: 3px; }
   .nav-menu { display: flex; flex-direction: column; }
   .nav-item { padding: 16px 30px; color: #D4C8C2; text-decoration: none; font-size: 14px; cursor: pointer; border-left: 3px solid transparent; transition: 0.3s; }
   .nav-item:hover, .nav-item.active { background-color: rgba(255,255,255,0.05); color: #FFF; border-left-color: #D9AA90; }
 
-  /* --- MAIN CONTENT --- */
+  /* MAIN */
   .main-content { flex: 1; padding: 50px 60px; overflow-y: auto; position: relative; }
   .header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 50px; border-bottom: 1px solid var(--border-color); padding-bottom: 20px; }
   .header h1 { font-family: 'Lora', serif; font-size: 34px; font-weight: 400; }
@@ -39,7 +29,7 @@
   .view-section.active { display: block; }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-  /* --- CARDS & TABLES --- */
+  /* DASHBOARD CARDS */
   .dashboard-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-bottom: 50px; }
   .card { background-color: var(--card-bg); padding: 30px; border-radius: 12px; border: 1px solid var(--border-color); }
   .card-title { font-size: 11px; text-transform: uppercase; color: var(--text-light); margin-bottom: 16px; font-weight: 600; }
@@ -47,8 +37,8 @@
   
   .section-title { font-family: 'Lora', serif; font-size: 22px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; }
   .btn-new { background-color: var(--sidebar-bg); color: #FFF; border: none; padding: 12px 24px; border-radius: 8px; font-size: 12px; text-transform: uppercase; cursor: pointer; }
-  .btn-refresh { background: transparent; border: 1px solid var(--border-color); padding: 10px 16px; border-radius: 8px; font-size: 12px; color: var(--text-light); cursor: pointer; margin-right: 10px;}
 
+  /* TABELA */
   .table-container { background-color: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); overflow: hidden; }
   .patient-table { width: 100%; border-collapse: collapse; text-align: left; }
   .patient-table th { padding: 20px 30px; font-size: 11px; text-transform: uppercase; color: var(--text-light); border-bottom: 1px solid var(--border-color); background: #FCFAFA; }
@@ -56,7 +46,7 @@
   .btn-outline { background: transparent; border: 1px solid var(--border-color); padding: 10px 20px; border-radius: 6px; font-size: 12px; cursor: pointer; transition: 0.3s; color: var(--text-light); }
   .btn-outline:hover { border-color: var(--sidebar-bg); color: var(--sidebar-bg); }
 
-  /* --- MODAL --- */
+  /* MODAL */
   .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(74,47,38,0.3); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
   .modal-overlay.active { display: flex; }
   .modal-content { background: var(--bg-color); width: 95%; max-width: 800px; max-height: 90vh; border-radius: 20px; padding: 40px; overflow-y: auto; position: relative; border: 1px solid var(--border-color); }
@@ -70,14 +60,11 @@
 
   .esquemas-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .esquema-item { background: #FFF; padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
-  .esquema-item strong { color: var(--accent); font-family: 'Lora', serif; font-size: 16px; }
-
   .text-area-clinica { width: 100%; height: 250px; padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); background: #FFF; font-size: 15px; margin-bottom: 20px; }
   .anamnese-box { background: #FFF; padding: 25px; border-radius: 12px; border: 1px solid var(--border-color); white-space: pre-wrap; font-size: 14px; line-height: 1.6; }
 </style>
 </head>
 <body>
-
   <div class="sidebar">
     <div class="logo-area"><h2>Cleo Martins</h2><span>Consultório Digital</span></div>
     <div class="nav-menu">
@@ -97,13 +84,14 @@
         <div class="card"><div class="card-title">Caixa do Dia</div><div class="card-value">R$ 381,00</div></div>
         <div class="card"><div class="card-title">Caixa do Mês</div><div class="card-value">R$ 4.250,00</div></div>
       </div>
+      <div class="section-title">Agenda Clínica <button class="btn-new">Novo Agendamento</button></div>
     </div>
 
     <div id="view-patients" class="view-section">
-      <div class="section-title">Arquivo Clínico <div><button class="btn-refresh" onclick="loadPatients()">↻ Atualizar</button><button class="btn-new" onclick="abrirModalRegisto()">+ Nova Paciente</button></div></div>
+      <div class="section-title">Arquivo Clínico <button class="btn-new" onclick="abrirModalRegisto()">+ Nova Paciente</button></div>
       <div class="table-container">
         <table class="patient-table">
-          <thead><tr><th>Nome da Paciente</th><th>Origem</th><th>Data Registro</th><th>Ações</th></tr></thead>
+          <thead><tr><th>Nome</th><th>Origem</th><th>Data</th><th>Ações</th></tr></thead>
           <tbody id="patients-tbody"></tbody>
         </table>
       </div>
@@ -114,28 +102,19 @@
     <div class="modal-content">
       <button class="btn-close" onclick="fecharFicha()">&times;</button>
       <h2 id="fichaNome" style="font-family:'Lora'; font-size:30px; margin-bottom:20px">Nome</h2>
-      
       <div class="tabs-nav">
         <div class="tab-link active" onclick="showTab('tab-esquemas', this)">Mapeamento</div>
         <div class="tab-link" onclick="showTab('tab-anamnese', this)">Anamnese</div>
         <div class="tab-link" onclick="showTab('tab-evolucao', this)">Evolução</div>
       </div>
-
       <div id="tab-esquemas" class="tab-pane active"><div class="esquemas-grid" id="fichaEsquemas"></div></div>
-      
       <div id="tab-anamnese" class="tab-pane">
-        <div class="anamnese-box" id="conteudoAnamnese">Aguardando preenchimento...</div>
+        <div class="anamnese-box" id="conteudoAnamnese">Carregando histórico...</div>
         <button class="btn-new" style="margin-top:20px" id="btnCopiarLink">Copiar Link de Anamnese</button>
       </div>
-
       <div id="tab-evolucao" class="tab-pane">
         <textarea class="text-area-clinica" id="inputEvolucao" placeholder="Notas da sessão..."></textarea>
-        <button class="btn-new" onclick="salvarEvolucao()">Salvar Evolução</button>
-      </div>
-
-      <div style="margin-top:40px; padding-top:20px; border-top:1px solid var(--border-color); display:flex; gap:10px">
-        <button class="btn-outline" onclick="abrirEdicao()">✏️ Editar</button>
-        <button class="btn-outline" style="color:var(--error-red); border-color:var(--error-red)" onclick="excluirPaciente()">🗑️ Excluir</button>
+        <button class="btn-new" onclick="salvarEvolucao()">Salvar Nota</button>
       </div>
     </div>
   </div>
@@ -143,9 +122,7 @@
 <script>
   const headers = { 'apikey': 'sb_publishable_IVMMnw4_9uF4C6-RBiElUg_lvIq8JRX', 'Authorization': 'Bearer sb_publishable_IVMMnw4_9uF4C6-RBiElUg_lvIq8JRX', 'Content-Type': 'application/json' };
   document.getElementById('dataAtual').textContent = new Date().toLocaleDateString('pt-BR', {weekday:'long', day:'numeric', month:'long'});
-  
-  let pacientesGlobais = [];
-  let indexAtual = null;
+  let pacientesGlobais = [], indexAtual = null;
 
   function changeView(v) {
     document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
@@ -154,63 +131,33 @@
     document.getElementById('menu-'+v).classList.add('active');
     if(v==='patients') loadPatients();
   }
-
   function showTab(t, b) {
     document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.tab-link').forEach(l => l.classList.remove('active'));
-    document.getElementById(t).classList.add('active');
-    b.classList.add('active');
+    document.getElementById(t).classList.add('active'); b.classList.add('active');
   }
-
   async function loadPatients() {
-    const tbody = document.getElementById('patients-tbody');
-    try {
-      const resp = await fetch('https://nyelqgsqpqoasywdioxi.supabase.co/rest/v1/clientes?select=*', { headers });
-      pacientesGlobais = (await resp.json()).reverse();
-      tbody.innerHTML = pacientesGlobais.map((p, i) => `<tr><td style="font-weight:600">${p.nome_completo}</td><td><span class="service-tag tag-diagnostico">${p.origem||'Manual'}</span></td><td>${new Date(p.created_at).toLocaleDateString()}</td><td><button class="btn-outline" onclick="abrirFicha(${i})">Abrir</button></td></tr>`).join('');
-    } catch(e) { tbody.innerHTML = '<tr><td colspan="4">Erro de conexão.</td></tr>'; }
+    const resp = await fetch('https://nyelqgsqpqoasywdioxi.supabase.co/rest/v1/clientes?select=*', { headers });
+    pacientesGlobais = (await resp.json()).reverse();
+    document.getElementById('patients-tbody').innerHTML = pacientesGlobais.map((p, i) => `<tr><td style="font-weight:600">${p.nome_completo}</td><td>${p.origem||'Manual'}</td><td>${new Date(p.created_at).toLocaleDateString()}</td><td><button class="btn-outline" onclick="abrirFicha(${i})">Abrir</button></td></tr>`).join('');
   }
-
   function abrirFicha(i) {
     indexAtual = i; const p = pacientesGlobais[i];
     document.getElementById('fichaNome').textContent = p.nome_completo;
     document.getElementById('inputEvolucao').value = p.evolucao_clinica || '';
-    document.getElementById('conteudoAnamnese').textContent = p.anamnese || 'Aguardando preenchimento do Link de Anamnese por parte da paciente...';
+    document.getElementById('conteudoAnamnese').textContent = p.anamnese || 'Aguardando preenchimento...';
     
-    const grid = document.getElementById('fichaEsquemas'); grid.innerHTML = '';
-    if(p.resultados_teste?.dominios?.includes(':')) {
-      p.resultados_teste.dominios.split(' | ').forEach(item => {
-        const parts = item.split(': ');
-        if(parts.length==2) grid.innerHTML += `<div class="esquema-item"><span>${parts[0]}</span><strong>${parts[1]}</strong></div>`;
-      });
-    } else { grid.innerHTML = '<div style="font-size:12px;color:var(--text-light)">Nenhum mapeamento realizado.</div>'; }
-
-    const btnLink = document.getElementById('btnCopiarLink');
-    btnLink.onclick = () => {
-      const linkCompleto = `https://inventario.cleomartins.site/anamnese.html?id=${p.id}`;
-      navigator.clipboard.writeText(linkCompleto).then(() => {
-        alert('Link copiado para a paciente ' + p.nome_completo);
-      });
+    document.getElementById('btnCopiarLink').onclick = () => {
+      const link = `https://inventario.cleomartins.site/anamnese.html?id=${p.id}`;
+      navigator.clipboard.writeText(link).then(() => alert('Link copiado!'));
     };
     document.getElementById('modalFicha').classList.add('active');
   }
-
   function fecharFicha() { document.getElementById('modalFicha').classList.remove('active'); }
-
   async function salvarEvolucao() {
     const p = pacientesGlobais[indexAtual];
-    await fetch(`https://nyelqgsqpqoasywdioxi.supabase.co/rest/v1/clientes?id=eq.${p.id}`, {
-      method: 'PATCH', headers, body: JSON.stringify({ evolucao_clinica: document.getElementById('inputEvolucao').value })
-    });
-    alert('Evolução salva!');
-    loadPatients();
-  }
-
-  async function excluirPaciente() {
-    const p = pacientesGlobais[indexAtual];
-    if(!confirm('Excluir permanentemente?')) return;
-    await fetch(`https://nyelqgsqpqoasywdioxi.supabase.co/rest/v1/clientes?id=eq.${p.id}`, { method: 'DELETE', headers });
-    fecharFicha(); loadPatients();
+    await fetch(`https://nyelqgsqpqoasywdioxi.supabase.co/rest/v1/clientes?id=eq.${p.id}`, { method: 'PATCH', headers, body: JSON.stringify({ evolucao_clinica: document.getElementById('inputEvolucao').value }) });
+    alert('Salvo!'); loadPatients();
   }
 </script>
 </body>
