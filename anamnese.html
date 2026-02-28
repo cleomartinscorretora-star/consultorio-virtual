@@ -7,150 +7,69 @@
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         :root { --bg: #F7F4EF; --text: #4A2F26; --accent: #C38A6B; --border: #E4DDD5; }
-        body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; line-height: 1.6; padding: 40px 20px; }
-        .container { max-width: 800px; margin: 0 auto; background: #FFF; padding: 60px; border-radius: 24px; border: 1px solid var(--border); box-shadow: 0 10px 40px rgba(0,0,0,0.03); }
-        h1 { font-family: 'Lora', serif; font-size: 32px; text-align: center; margin-bottom: 10px; font-weight: 400; }
-        .subtitle { text-align: center; font-size: 12px; text-transform: uppercase; letter-spacing: 2px; color: var(--accent); margin-bottom: 50px; }
-        
-        section { margin-bottom: 50px; border-bottom: 1px solid var(--border); padding-bottom: 30px; }
-        h3 { font-family: 'Lora', serif; font-size: 20px; margin-bottom: 25px; color: var(--accent); border-left: 3px solid var(--accent); padding-left: 15px; }
-        
-        .form-group { margin-bottom: 30px; }
-        label { display: block; font-size: 15px; font-weight: 500; margin-bottom: 10px; }
-        input[type="text"], input[type="date"], input[type="number"], select, textarea {
-            width: 100%; padding: 14px; border: 1px solid var(--border); border-radius: 10px; background: #FCFAFA; font-size: 15px; outline: none; transition: 0.3s;
-        }
-        input:focus, textarea:focus { border-color: var(--accent); background: #FFF; }
-        textarea { height: 120px; resize: vertical; }
-        
-        .radio-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr)); gap: 12px; margin-top: 10px; }
-        .radio-option { display: flex; align-items: center; gap: 10px; font-size: 14px; background: #FCFAFA; padding: 12px; border: 1px solid var(--border); border-radius: 8px; cursor: pointer; transition: 0.2s; }
-        .radio-option:hover { border-color: var(--accent); }
-        
-        .scale-group { display: flex; flex-direction: column; gap: 15px; margin-top: 20px; }
-        .scale-item { display: flex; align-items: center; justify-content: space-between; background: #FCFAFA; padding: 10px 20px; border-radius: 8px; }
-        
-        .btn-submit { width: 100%; padding: 20px; background: var(--text); color: #FFF; border: none; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; transition: 0.3s; margin-top: 40px; }
-        .btn-submit:hover { background: #321f18; transform: translateY(-2px); }
-        
-        #msgSucesso { display: none; text-align: center; padding: 60px; }
+        body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; padding: 40px 20px; }
+        .container { max-width: 800px; margin: 0 auto; background: #FFF; padding: 50px; border-radius: 20px; border: 1px solid var(--border); }
+        h1 { font-family: 'Lora', serif; font-size: 28px; text-align: center; margin-bottom: 40px; }
+        section { margin-bottom: 40px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+        h3 { color: var(--accent); font-family: 'Lora', serif; margin-bottom: 20px; }
+        .form-group { margin-bottom: 25px; }
+        label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 8px; }
+        input, select, textarea { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: #FCFAFA; }
+        textarea { height: 100px; }
+        .btn-submit { width: 100%; padding: 20px; background: var(--text); color: #FFF; border: none; border-radius: 10px; cursor: pointer; font-size: 16px; margin-top: 20px; }
     </style>
 </head>
 <body>
-
 <div class="container" id="formContainer">
     <h1>Anamnese Terapêutica</h1>
-    <p class="subtitle">Cleo Martins - Desbloqueio do Feminino</p>
-
     <form id="anamneseForm">
         <section>
             <h3>SEÇÃO 1 – DADOS PESSOAIS</h3>
-            <div class="form-group"><label>Nome completo *</label><input type="text" name="Nome_Completo" required></div>
-            <div class="form-group"><label>Data de nascimento *</label><input type="date" name="Data_Nascimento" required></div>
-            <div class="form-group">
-                <label>Estado civil *</label>
-                <div class="radio-grid">
-                    <label class="radio-option"><input type="radio" name="Estado_Civil" value="Solteira" required> Solteira</label>
-                    <label class="radio-option"><input type="radio" name="Estado_Civil" value="Em relacionamento"> Em relacionamento</label>
-                    <label class="radio-option"><input type="radio" name="Estado_Civil" value="Casada"> Casada</label>
-                    <label class="radio-option"><input type="radio" name="Estado_Civil" value="Divorciada"> Divorciada</label>
-                    <label class="radio-option"><input type="radio" name="Estado_Civil" value="Viúva"> Viúva</label>
-                </div>
-            </div>
-            <div class="form-group"><label>Número de filhos (se houver)</label><input type="number" name="Filhos"></div>
-            <div class="form-group"><label>Profissão</label><input type="text" name="Profissão"></div>
-            <div class="form-group"><label>Telefone *</label><input type="text" name="Telefone" required></div>
+            <div class="form-group"><label>Nome completo *</label><input type="text" name="Nome" required></div>
+            <div class="form-group"><label>Data de nascimento *</label><input type="date" name="Nascimento" required></div>
+            <div class="form-group"><label>Estado civil</label><select name="Estado_Civil"><option>Solteira</option><option>Em relacionamento</option><option>Casada</option><option>Divorciada</option><option>Viúva</option></select></div>
         </section>
-
         <section>
             <h3>SEÇÃO 2 – MOTIVO E MOMENTO ATUAL</h3>
-            <div class="form-group"><label>O que te trouxe para este processo neste momento da sua vida? *</label><textarea name="Motivo_Processo" required></textarea></div>
-            <div class="form-group"><label>O que mais está doendo emocionalmente hoje? *</label><textarea name="Dor_Emocional" required></textarea></div>
-            <div class="form-group"><label>Se nada mudar, como você imagina sua vida daqui a 1 ano? *</label><textarea name="Perspectiva_1_Ano" required></textarea></div>
+            <div class="form-group"><label>O que te trouxe para este processo? *</label><textarea name="Motivo" required></textarea></div>
+            <div class="form-group"><label>O que mais está doendo emocionalmente hoje? *</label><textarea name="Dor" required></textarea></div>
         </section>
-
         <section>
             <h3>SEÇÃO 3 – INFÂNCIA E RAIZ EMOCIONAL</h3>
-            <div class="form-group">
-                <label>Quem te criou? *</label>
-                <div class="radio-grid">
-                    <label class="radio-option"><input type="radio" name="Criacao" value="Pai e mãe" required> Pai e mãe</label>
-                    <label class="radio-option"><input type="radio" name="Criacao" value="Apenas mãe"> Apenas mãe</label>
-                    <label class="radio-option"><input type="radio" name="Criacao" value="Apenas pai"> Apenas pai</label>
-                    <label class="radio-option"><input type="radio" name="Criacao" value="Avós"> Avós</label>
-                    <label class="radio-option"><input type="radio" name="Criacao" value="Outros"> Outros</label>
-                </div>
-            </div>
-            <div class="form-group"><label>Como foi sua relação com sua mãe? *</label><textarea name="Relacao_Mae" required></textarea></div>
-            <div class="form-group"><label>Como foi sua relação com seu pai? *</label><textarea name="Relacao_Pai" required></textarea></div>
-            <div class="form-group"><label>O que você precisava na infância e sente que não recebeu? *</label><textarea name="Falta_Infancia" required></textarea></div>
+            <div class="form-group"><label>Quem te criou? *</label><input type="text" name="Criacao" required></div>
+            <div class="form-group"><label>Como foi sua relação com sua mãe? *</label><textarea name="Mae" required></textarea></div>
+            <div class="form-group"><label>Como foi sua relação com seu pai? *</label><textarea name="Pai" required></textarea></div>
         </section>
-
+        <section>
+            <h3>SEÇÃO 4 – MODELO DE AMOR</h3>
+            <div class="form-group"><label>O que você aprendeu sobre amor observando seus pais? *</label><textarea name="Amor_Pais" required></textarea></div>
+        </section>
+        <section>
+            <h3>SEÇÃO 5 – RELACIONAMENTOS AMOROSOS</h3>
+            <div class="form-group"><label>Você tem medo de abandono? *</label><select name="Abandono"><option>Sim</option><option>Não</option><option>Às vezes</option></select></div>
+        </section>
         <section>
             <h3>SEÇÃO 6 – CORPO, FEMININO E SAÚDE</h3>
-            <div class="form-group"><label>Como é sua relação com seu corpo hoje? *</label><textarea name="Relacao_Corpo" required></textarea></div>
-            <div class="form-group">
-                <label>Como você vive sua sexualidade hoje?</label>
-                <div class="radio-grid">
-                    <label class="radio-option"><input type="radio" name="Sexualidade" value="Com prazer"> Com prazer</label>
-                    <label class="radio-option"><input type="radio" name="Sexualidade" value="Com culpa"> Com culpa</label>
-                    <label class="radio-option"><input type="radio" name="Sexualidade" value="Com medo"> Com medo</label>
-                    <label class="radio-option"><input type="radio" name="Sexualidade" value="Com desconexão"> Com desconexão</label>
-                </div>
-            </div>
+            <div class="form-group"><label>Como é sua relação com seu corpo hoje? *</label><textarea name="Corpo" required></textarea></div>
         </section>
-
-        <section>
-            <h3>SEÇÃO 8 – NÍVEL ATUAL DE EMOÇÕES (0 a 10)</h3>
-            <div class="scale-group">
-                <div class="scale-item"><span>Ansiedade</span><input type="number" name="Escala_Ansiedade" min="0" max="10"></div>
-                <div class="scale-item"><span>Medo</span><input type="number" name="Escala_Medo" min="0" max="10"></div>
-                <div class="scale-item"><span>Culpa</span><input type="number" name="Escala_Culpa" min="0" max="10"></div>
-                <div class="scale-item"><span>Frustração</span><input type="number" name="Escala_Frustracao" min="0" max="10"></div>
-            </div>
-        </section>
-
-        <button type="submit" class="btn-submit" id="btnEnviar">Finalizar e Enviar para Cleo Martins</button>
+        <button type="submit" class="btn-submit" id="btnEnviar">Enviar para Cleo Martins</button>
     </form>
 </div>
-
-<div class="container" id="msgSucesso">
-    <h2 style="font-family:'Lora'; color:var(--accent)">Recebido com carinho.</h2>
-    <p style="margin-top:20px">Sua história foi registrada com segurança. <br>Nos vemos em breve na nossa jornada de desbloqueio.</p>
-</div>
-
 <script>
     const urlParams = new URLSearchParams(window.location.search);
     const pacienteId = urlParams.get('id');
-
     document.getElementById('anamneseForm').onsubmit = async (e) => {
         e.preventDefault();
         const btn = document.getElementById('btnEnviar');
-        btn.disabled = true; btn.innerText = "Sincronizando prontuário...";
-
-        const formData = new FormData(e.target);
-        let textoFinal = "--- RESUMO DA ANAMNESE ---\n\n";
-        formData.forEach((value, key) => {
-            if(value) textoFinal += `${key.replace(/_/g, ' ')}: ${value}\n\n`;
+        btn.innerText = "Enviando...";
+        let textoFinal = "";
+        new FormData(e.target).forEach((v, k) => textoFinal += `${k}: ${v}\n\n`);
+        await fetch(`https://nyelqgsqpqoasywdioxi.supabase.co/rest/v1/clientes?id=eq.${pacienteId}`, {
+            method: 'PATCH',
+            headers: { 'Content-Type': 'application/json', 'apikey': 'sb_publishable_IVMMnw4_9uF4C6-RBiElUg_lvIq8JRX', 'Authorization': 'Bearer sb_publishable_IVMMnw4_9uF4C6-RBiElUg_lvIq8JRX' },
+            body: JSON.stringify({ anamnese: textoFinal })
         });
-
-        try {
-            const resp = await fetch(`https://nyelqgsqpqoasywdioxi.supabase.co/rest/v1/clientes?id=eq.${pacienteId}`, {
-                method: 'PATCH',
-                headers: {
-                    'Content-Type': 'application/json',
-                    'apikey': 'sb_publishable_IVMMnw4_9uF4C6-RBiElUg_lvIq8JRX',
-                    'Authorization': 'Bearer sb_publishable_IVMMnw4_9uF4C6-RBiElUg_lvIq8JRX'
-                },
-                body: JSON.stringify({ anamnese: textoFinal })
-            });
-
-            if(resp.ok) {
-                document.getElementById('formContainer').style.display = 'none';
-                document.getElementById('msgSucesso').style.display = 'block';
-                window.scrollTo(0,0);
-            }
-        } catch (e) { alert("Erro de conexão. Tente novamente."); btn.disabled = false; }
+        document.getElementById('formContainer').innerHTML = "<h2 style='text-align:center;font-family:Lora;color:#C38A6B'>Recebido com sucesso.</h2>";
     };
 </script>
 </body>
