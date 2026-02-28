@@ -179,19 +179,34 @@
     document.getElementById('patients-tbody').innerHTML = pacientesGlobais.map((p, i) => `<tr><td>${p.nome_completo}</td><td>${p.origem||'Manual'}</td><td>${new Date(p.created_at).toLocaleDateString()}</td><td><button class="btn-outline" onclick="abrirFicha(${i})">Abrir</button></td></tr>`).join('');
   }
 
-  // CONFIGURAÇÃO DO LINK (AJUSTADA PARA O SEU DOMÍNIO)
+  function abrirFicha(i) {
+    indexAtual = i; 
+    const p = pacientesGlobais[i];
+    
+    document.getElementById('fichaNome').textContent = p.nome_completo;
+    document.getElementById('inputEvolucao').value = p.evolucao_clinica || '';
+    
+    // Atualiza o texto da anamnese ou mostra o aviso se estiver vazio
+    const conteudoAnamnese = document.getElementById('conteudoAnamnese');
+    conteudoAnamnese.textContent = p.anamnese || 'Aguardando preenchimento do Link de Anamnese por parte da paciente...';
+    
+    // CONFIGURAÇÃO DO LINK (FIXO NO SEU DOMÍNIO)
     const btnLink = document.getElementById('btnCopiarLink');
     
     btnLink.onclick = () => {
-      // Forçamos o link a usar o seu domínio oficial da Vercel
+      // Usamos o seu domínio oficial para evitar erros de redirecionamento
       const linkCompleto = `https://inventario.cleomartins.site/anamnese.html?id=${p.id}`;
       
       navigator.clipboard.writeText(linkCompleto).then(() => {
-        alert('Perfeito, Cleo! Link da Anamnese copiado. Agora é só colar no WhatsApp da ' + p.nome_completo);
+        alert('Prontinho, Cleo! Link da Anamnese copiado. Agora é só colar no WhatsApp da ' + p.nome_completo);
       }).catch(err => {
-        prompt('Houve um bloqueio automático do navegador. Copie o link abaixo manualmente:', linkCompleto);
+        // Caso o navegador bloqueie a cópia automática por segurança
+        prompt('Houve um pequeno bloqueio. Copie o link abaixo manualmente:', linkCompleto);
       });
     };
+
+    document.getElementById('modalFicha').classList.add('active');
+  }
 
     document.getElementById('modalFicha').classList.add('active');
   }
