@@ -21,82 +21,73 @@
   * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'DM Sans', sans-serif; }
   body { background-color: var(--bg-color); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
 
-  /* --- MENU LATERAL --- */
+  /* --- SIDEBAR --- */
   .sidebar { width: 260px; background-color: var(--sidebar-bg); color: #FFF; display: flex; flex-direction: column; padding: 40px 0; border-right: 1px solid rgba(255,255,255,0.1); }
   .logo-area { text-align: center; margin-bottom: 50px; padding: 0 20px; }
-  .logo-area h2 { font-family: 'Lora', serif; font-size: 22px; font-weight: 400; letter-spacing: 1px; color: #F7F4EF; margin-bottom: 4px; }
-  .logo-area span { font-size: 10px; color: #D9AA90; text-transform: uppercase; letter-spacing: 3px; font-weight: 500; }
-  
+  .logo-area h2 { font-family: 'Lora', serif; font-size: 22px; font-weight: 400; letter-spacing: 1px; color: #F7F4EF; }
+  .logo-area span { font-size: 10px; color: #D9AA90; text-transform: uppercase; letter-spacing: 3px; }
   .nav-menu { display: flex; flex-direction: column; }
-  .nav-item { padding: 16px 30px; color: #D4C8C2; text-decoration: none; font-size: 14px; font-weight: 400; transition: all 0.3s ease; cursor: pointer; border-left: 3px solid transparent; letter-spacing: 0.5px; }
+  .nav-item { padding: 16px 30px; color: #D4C8C2; text-decoration: none; font-size: 14px; cursor: pointer; border-left: 3px solid transparent; transition: 0.3s; }
   .nav-item:hover, .nav-item.active { background-color: rgba(255,255,255,0.05); color: #FFF; border-left-color: #D9AA90; }
 
-  /* --- ÁREA PRINCIPAL --- */
+  /* --- MAIN CONTENT --- */
   .main-content { flex: 1; padding: 50px 60px; overflow-y: auto; position: relative; }
-  
   .header { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 50px; border-bottom: 1px solid var(--border-color); padding-bottom: 20px; }
-  .header h1 { font-family: 'Lora', serif; font-size: 34px; color: var(--text-main); font-weight: 400; }
-  .date-display { font-size: 13px; color: var(--text-light); font-weight: 400; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
+  .header h1 { font-family: 'Lora', serif; font-size: 34px; font-weight: 400; }
+  .date-display { font-size: 13px; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px; margin-bottom: 8px; }
 
-  /* --- VISUALIZAÇÕES --- */
+  /* --- DASHBOARD --- */
   .view-section { display: none; animation: fadeIn 0.4s ease; }
   .view-section.active { display: block; }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
-
-  /* --- DASHBOARD CARDS --- */
   .dashboard-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-bottom: 50px; }
   .card { background-color: var(--card-bg); padding: 30px; border-radius: 12px; border: 1px solid var(--border-color); }
-  .card-title { font-size: 11px; text-transform: uppercase; letter-spacing: 1.5px; color: var(--text-light); font-weight: 500; margin-bottom: 16px; }
-  .card-value { font-family: 'Lora', serif; font-size: 36px; font-weight: 400; color: var(--text-main); line-height: 1; }
-  .card-subtitle { font-size: 12px; color: var(--success); font-weight: 400; margin-top: 12px; }
-
-  /* --- AGENDA --- */
-  .section-title { font-family: 'Lora', serif; font-size: 22px; margin-bottom: 24px; font-weight: 400; display: flex; justify-content: space-between; align-items: center; color: var(--text-main); }
-  .btn-new { background-color: var(--sidebar-bg); color: #FFF; border: none; padding: 12px 24px; border-radius: 8px; font-size: 12px; font-weight: 500; letter-spacing: 1px; text-transform: uppercase; cursor: pointer; transition: 0.3s; }
-  .btn-new:hover { background-color: #321f18; }
-  .btn-refresh { background: transparent; border: 1px solid var(--border-color); padding: 10px 16px; border-radius: 8px; font-size: 12px; font-weight: 600; color: var(--text-light); cursor: pointer; transition: 0.2s; margin-right: 10px;}
+  .card-title { font-size: 11px; text-transform: uppercase; color: var(--text-light); margin-bottom: 16px; font-weight: 600; }
+  .card-value { font-family: 'Lora', serif; font-size: 36px; color: var(--text-main); }
+  
+  .section-title { font-family: 'Lora', serif; font-size: 22px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; }
+  .btn-new { background-color: var(--sidebar-bg); color: #FFF; border: none; padding: 12px 24px; border-radius: 8px; font-size: 12px; text-transform: uppercase; cursor: pointer; }
+  .btn-refresh { background: transparent; border: 1px solid var(--border-color); padding: 10px 16px; border-radius: 8px; font-size: 12px; color: var(--text-light); cursor: pointer; margin-right: 10px;}
 
   .agenda-list { background-color: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); padding: 0 30px; }
   .agenda-item { display: flex; align-items: center; justify-content: space-between; padding: 24px 0; border-bottom: 1px solid var(--border-color); }
-  .agenda-item:last-child { border-bottom: none; }
-  .time-block { width: 90px; font-family: 'Lora', serif; color: var(--text-main); font-size: 18px; }
-  .patient-info { flex: 1; }
-  .patient-name { font-weight: 500; font-size: 16px; margin-bottom: 6px; color: var(--text-main); }
-  .service-tag { display: inline-block; padding: 4px 12px; border-radius: 4px; font-size: 10px; font-weight: 600; text-transform: uppercase; letter-spacing: 1px; }
+  .service-tag { display: inline-block; padding: 4px 12px; border-radius: 4px; font-size: 10px; font-weight: 600; text-transform: uppercase; }
   .tag-diagnostico { background-color: #FDF3E1; color: #9A6D26; } 
-  .tag-tratamento { background-color: #F0EBE6; color: var(--sidebar-bg); }
-
-  .btn-outline { background: transparent; border: 1px solid var(--border-color); padding: 10px 20px; border-radius: 6px; font-size: 12px; font-weight: 500; color: var(--text-light); cursor: pointer; transition: all 0.3s; }
-  .btn-outline:hover { border-color: var(--sidebar-bg); color: var(--sidebar-bg); }
 
   /* --- TABELA --- */
   .table-container { background-color: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); overflow: hidden; }
   .patient-table { width: 100%; border-collapse: collapse; text-align: left; }
-  .patient-table th { padding: 20px 30px; font-weight: 500; font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-light); border-bottom: 1px solid var(--border-color); background-color: #FCFAFA; }
-  .patient-table td { padding: 24px 30px; font-size: 14px; border-bottom: 1px solid var(--border-color); color: var(--text-main); }
-  .status-loading { padding: 40px; text-align: center; color: var(--text-light); font-style: italic; }
+  .patient-table th { padding: 20px 30px; font-size: 11px; text-transform: uppercase; color: var(--text-light); border-bottom: 1px solid var(--border-color); background: #FCFAFA; }
+  .patient-table td { padding: 24px 30px; font-size: 14px; border-bottom: 1px solid var(--border-color); }
+  .btn-outline { background: transparent; border: 1px solid var(--border-color); padding: 10px 20px; border-radius: 6px; font-size: 12px; cursor: pointer; transition: 0.3s; color: var(--text-light); }
+  .btn-outline:hover { border-color: var(--sidebar-bg); color: var(--sidebar-bg); }
 
-  /* --- MODAIS --- */
-  .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(74,47,38,0.3); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(3px); }
-  .modal-overlay.active { display: flex; animation: fadeIn 0.3s ease; }
-  .modal-content { background: var(--bg-color); width: 90%; max-width: 650px; max-height: 85vh; border-radius: 16px; padding: 40px; overflow-y: auto; position: relative; box-shadow: 0 10px 40px rgba(0,0,0,0.1); border: 1px solid var(--border-color); }
-  .btn-close { position: absolute; top: 25px; right: 30px; font-size: 28px; cursor: pointer; color: var(--text-light); border: none; background: none; }
-  
-  .ficha-header { margin-bottom: 30px; border-bottom: 1px solid var(--border-color); padding-bottom: 20px; }
-  .ficha-title { font-family: 'Lora', serif; font-size: 28px; color: var(--text-main); margin-bottom: 8px; }
-  .ficha-subtitle { font-size: 11px; color: var(--text-light); text-transform: uppercase; letter-spacing: 1px; }
-  .ficha-box { background: var(--card-bg); padding: 20px; border-radius: 10px; border: 1px solid var(--border-color); margin-bottom: 24px; }
-  .ficha-label { font-size: 11px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-light); margin-bottom: 8px; font-weight: 600; display: block; }
-  
+  /* --- MODAL PRONTUÁRIO (ABAS) --- */
+  .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(74,47,38,0.3); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
+  .modal-overlay.active { display: flex; }
+  .modal-content { background: var(--bg-color); width: 95%; max-width: 800px; max-height: 90vh; border-radius: 20px; padding: 40px; overflow-y: auto; position: relative; box-shadow: 0 20px 50px rgba(0,0,0,0.15); border: 1px solid var(--border-color); }
+  .btn-close { position: absolute; top: 25px; right: 30px; font-size: 30px; cursor: pointer; border: none; background: none; color: var(--text-light); }
+
+  /* ABAS DESIGN */
+  .tabs-nav { display: flex; gap: 30px; border-bottom: 1px solid var(--border-color); margin-bottom: 30px; }
+  .tab-link { padding-bottom: 12px; font-size: 13px; text-transform: uppercase; letter-spacing: 1px; color: var(--text-light); cursor: pointer; border-bottom: 2px solid transparent; transition: 0.3s; }
+  .tab-link.active { color: var(--sidebar-bg); border-bottom-color: var(--sidebar-bg); font-weight: 600; }
+  .tab-pane { display: none; animation: fadeIn 0.3s ease; }
+  .tab-pane.active { display: block; }
+
+  /* ESTILOS FICHA */
+  .ficha-header h2 { font-family: 'Lora', serif; font-size: 30px; margin-bottom: 5px; }
+  .ficha-info-topo { font-size: 13px; color: var(--text-light); text-transform: uppercase; margin-bottom: 25px; }
   .esquemas-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
-  .esquema-item { background: var(--cream); padding: 12px 16px; border-radius: 8px; border: 1px solid var(--border-color); font-size: 13px; display: flex; justify-content: space-between; align-items: center; }
-  .esquema-item strong { font-family: 'Lora', serif; font-size: 16px; color: var(--accent); }
+  .esquema-item { background: #FFF; padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; font-size: 13px; }
+  .esquema-item strong { color: var(--accent); font-family: 'Lora', serif; font-size: 16px; }
 
-  /* FORMULÁRIO */
-  .form-group { margin-bottom: 18px; }
-  .form-input { width: 100%; padding: 12px 16px; border: 1px solid var(--border-color); border-radius: 8px; font-size: 14px; outline: none; background: #FFF; }
-  .btn-submit { width: 100%; padding: 14px; background: var(--sidebar-bg); color: #FFF; border: none; border-radius: 8px; cursor: pointer; font-size: 14px; }
-  .footer-actions { display: flex; justify-content: space-between; margin-top: 30px; border-top: 1px solid var(--border-color); padding-top: 20px; }
+  /* EVOLUÇÃO & ANAMNESE */
+  .text-area-clinica { width: 100%; height: 250px; padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); background: #FFF; font-size: 15px; line-height: 1.6; color: var(--text-main); outline: none; margin-bottom: 20px; }
+  .anamnese-box { background: #FFF; padding: 25px; border-radius: 12px; border: 1px solid var(--border-color); font-size: 14px; line-height: 1.8; color: var(--text-main); }
+  
+  /* FOOTER */
+  .modal-footer { display: flex; justify-content: space-between; margin-top: 40px; padding-top: 20px; border-top: 1px solid var(--border-color); }
 </style>
 </head>
 <body>
@@ -119,22 +110,13 @@
 
     <div id="view-dashboard" class="view-section active">
       <div class="dashboard-cards">
-        <div class="card"><div class="card-title">Atendimentos Hoje</div><div class="card-value">3</div><div class="card-subtitle">2 novos diagnósticos</div></div>
-        <div class="card"><div class="card-title">Caixa do Dia</div><div class="card-value">R$ 381,00</div><div class="card-subtitle">Sessões de triagem</div></div>
-        <div class="card"><div class="card-title">Caixa do Mês</div><div class="card-value">R$ 4.250,00</div><div class="card-subtitle" style="color:var(--accent);">Relatório detalhado</div></div>
+        <div class="card"><div class="card-title">Atendimentos Hoje</div><div class="card-value">3</div></div>
+        <div class="card"><div class="card-title">Caixa do Dia</div><div class="card-value">R$ 381,00</div></div>
+        <div class="card"><div class="card-title">Caixa do Mês</div><div class="card-value">R$ 4.250,00</div></div>
       </div>
       <div class="section-title">Agenda Clínica <button class="btn-new">Novo Agendamento</button></div>
       <div class="agenda-list">
-        <div class="agenda-item">
-          <div class="time-block">14:00</div>
-          <div class="patient-info"><div class="patient-name">Mariana Silva</div><span class="service-tag tag-diagnostico">Sessão de Clareza</span></div>
-          <div class="action-buttons"><button class="btn-outline">Prontuário</button><button class="btn-outline" style="border-color:var(--accent);color:var(--accent)">Finalizar & Gerar Caixa</button></div>
-        </div>
-        <div class="agenda-item">
-          <div class="time-block">16:30</div>
-          <div class="patient-info"><div class="patient-name">Juliana Costa</div><span class="service-tag tag-tratamento">Mentoria DNA Feminino</span></div>
-          <div class="action-buttons"><button class="btn-outline">Evolução</button><button class="btn-outline" style="border-color:var(--success);color:var(--success)">Concluído</button></div>
-        </div>
+        <div class="agenda-item"><div class="patient-info"><div class="patient-name">Mariana Silva</div><span class="service-tag tag-diagnostico">Sessão de Clareza</span></div><button class="btn-outline" onclick="changeView('patients')">Ver Prontuário</button></div>
       </div>
     </div>
 
@@ -142,8 +124,8 @@
       <div class="section-title">Arquivo Clínico <div><button class="btn-refresh" onclick="loadPatients()">↻ Atualizar</button><button class="btn-new" onclick="abrirModalRegisto()">+ Nova Paciente</button></div></div>
       <div class="table-container">
         <table class="patient-table">
-          <thead><tr><th>Nome da Paciente</th><th>Origem</th><th>Data do Registro</th><th>Prontuário</th></tr></thead>
-          <tbody id="patients-tbody"><tr><td colspan="4" class="status-loading">Carregando dados...</td></tr></tbody>
+          <thead><tr><th>Nome da Paciente</th><th>Origem</th><th>Data Registro</th><th>Ações</th></tr></thead>
+          <tbody id="patients-tbody"><tr><td colspan="4" style="text-align:center;padding:40px">Carregando...</td></tr></tbody>
         </table>
       </div>
     </div>
@@ -152,13 +134,43 @@
   <div class="modal-overlay" id="modalFicha">
     <div class="modal-content">
       <button class="btn-close" onclick="fecharFicha()">&times;</button>
-      <div class="ficha-header"><h2 class="ficha-title" id="fichaNome">Nome</h2><div class="ficha-subtitle" id="fichaOrigem">Origem</div></div>
-      <div class="ficha-box"><span class="ficha-label">Dados Preliminares</span><div id="fichaAnotacoes">...</div></div>
-      <span class="ficha-label">Mapeamento de Esquemas</span>
-      <div class="esquemas-grid" id="fichaEsquemas"></div>
-      <div class="footer-actions">
-        <div><button class="btn-outline" onclick="abrirEdicao()">✏️ Editar</button><button class="btn-outline" style="color:var(--error-red);border-color:var(--error-red);margin-left:10px" onclick="excluirPaciente()">🗑️ Excluir</button></div>
-        <button class="btn-outline" onclick="window.print()">🖨️ Imprimir</button>
+      
+      <div class="ficha-header">
+        <h2 id="fichaNome">Nome da Paciente</h2>
+        <div class="ficha-info-topo" id="fichaSub">IDADE: -- | PROFISSÃO: -- | ORIGEM: --</div>
+      </div>
+
+      <div class="tabs-nav">
+        <div class="tab-link active" onclick="showTab('tab-esquemas', this)">Mapeamento</div>
+        <div class="tab-link" onclick="showTab('tab-anamnese', this)">Histórico/Anamnese</div>
+        <div class="tab-link" onclick="showTab('tab-evolucao', this)">Evolução Terapêutica</div>
+      </div>
+
+      <div id="tab-esquemas" class="tab-pane active">
+        <span class="ficha-label" style="margin-bottom:15px;display:block">Domínios de Esquemas Identificados</span>
+        <div class="esquemas-grid" id="fichaEsquemas"></div>
+      </div>
+
+      <div id="tab-anamnese" class="tab-pane">
+        <div class="anamnese-box">
+          <p style="color:var(--text-light); font-style:italic">Aguardando preenchimento do Link de Anamnese por parte da paciente...</p>
+          <div id="conteudoAnamnese" style="margin-top:20px; display:none;">
+            </div>
+        </div>
+      </div>
+
+      <div id="tab-evolucao" class="tab-pane">
+        <span class="ficha-label" style="margin-bottom:15px;display:block">Notas da Sessão e Evolução Clínica</span>
+        <textarea class="text-area-clinica" id="inputEvolucao" placeholder="Descreva aqui os insights, padrões identificados e técnicas utilizadas nesta sessão..."></textarea>
+        <button class="btn-new" onclick="salvarEvolucao()">Salvar Nota de Evolução</button>
+      </div>
+
+      <div class="modal-footer">
+        <div>
+          <button class="btn-outline" onclick="abrirEdicao()">✏️ Editar Dados</button>
+          <button class="btn-outline" style="color:var(--error-red);border-color:var(--error-red);margin-left:10px" onclick="excluirPaciente()">🗑️ Excluir</button>
+        </div>
+        <button class="btn-outline" onclick="window.print()">🖨️ Imprimir Prontuário</button>
       </div>
     </div>
   </div>
@@ -166,10 +178,10 @@
   <div class="modal-overlay" id="modalRegisto">
     <div class="modal-content" style="max-width:500px">
       <button class="btn-close" onclick="fecharModalRegisto()">&times;</button>
-      <div class="ficha-header"><h2 class="ficha-title" id="modalTitulo">Novo Prontuário</h2></div>
+      <h2 style="font-family:'Lora';margin-bottom:25px" id="modalTitulo">Nova Paciente</h2>
       <form onsubmit="salvarPaciente(event)">
         <input type="hidden" id="cadId">
-        <div class="form-group"><label class="ficha-label">Nome Completo *</label><input type="text" id="cadNome" class="form-input" required></div>
+        <div class="form-group"><label class="ficha-label">Nome Completo</label><input type="text" id="cadNome" class="form-input" required></div>
         <div style="display:grid;grid-template-columns:1fr 1fr;gap:15px">
           <div class="form-group"><label class="ficha-label">Telefone</label><input type="text" id="cadTelefone" class="form-input"></div>
           <div class="form-group"><label class="ficha-label">Idade</label><input type="text" id="cadIdade" class="form-input"></div>
@@ -178,22 +190,23 @@
         <div class="form-group">
           <label class="ficha-label">Origem</label>
           <select id="cadOrigem" class="form-input">
-            <option value="WhatsApp">WhatsApp</option><option value="Indicação">Indicação</option>
-            <option value="Mentoria DNA Feminino">Mentoria DNA Feminino</option><option value="Inventário">Inventário</option>
+            <option value="WhatsApp">WhatsApp</option><option value="Indicação">Indicação</option><option value="Inventário">Inventário</option>
           </select>
         </div>
-        <button type="submit" class="btn-submit" id="btnSalvar">Salvar Prontuário</button>
+        <button type="submit" class="btn-submit" id="btnSalvar">Confirmar Prontuário</button>
       </form>
     </div>
   </div>
 
 <script>
+  // CONFIG INICIAL
   const options = { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' };
   document.getElementById('dataAtual').textContent = new Date().toLocaleDateString('pt-BR', options);
 
   let pacientesGlobais = [];
   let indexAtual = null;
 
+  // NAVEGAÇÃO ENTRE TELAS
   function changeView(view) {
     document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
@@ -203,6 +216,15 @@
     if(view==='patients') loadPatients();
   }
 
+  // NAVEGAÇÃO ENTRE ABAS DO MODAL
+  function showTab(tabId, btn) {
+    document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
+    document.querySelectorAll('.tab-link').forEach(l => l.classList.remove('active'));
+    document.getElementById(tabId).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  // BANCO DE DADOS (CARREGAR)
   async function loadPatients() {
     const tbody = document.getElementById('patients-tbody');
     try {
@@ -210,29 +232,55 @@
         headers: { 'apikey': 'sb_publishable_IVMMnw4_9uF4C6-RBiElUg_lvIq8JRX', 'Authorization': 'Bearer sb_publishable_IVMMnw4_9uF4C6-RBiElUg_lvIq8JRX' }
       });
       pacientesGlobais = (await resp.json()).reverse();
-      tbody.innerHTML = pacientesGlobais.map((p, i) => `<tr><td style="font-weight:500">${p.nome_completo}</td><td><span class="service-tag tag-diagnostico">${p.origem||'Manual'}</span></td><td>${new Date(p.created_at).toLocaleDateString()}</td><td><button class="btn-outline" onclick="abrirFicha(${i})">Abrir Ficha</button></td></tr>`).join('');
-    } catch(e) { tbody.innerHTML = '<tr><td colspan="4">Erro ao carregar.</td></tr>'; }
+      tbody.innerHTML = pacientesGlobais.map((p, i) => `<tr><td style="font-weight:600">${p.nome_completo}</td><td><span class="service-tag tag-diagnostico">${p.origem||'Manual'}</span></td><td>${new Date(p.created_at).toLocaleDateString()}</td><td><button class="btn-outline" onclick="abrirFicha(${i})">Abrir Prontuário</button></td></tr>`).join('');
+    } catch(e) { tbody.innerHTML = '<tr><td colspan="4">Erro ao carregar dados.</td></tr>'; }
   }
 
+  // ABRIR FICHA
   function abrirFicha(i) {
     indexAtual = i; const p = pacientesGlobais[i];
     document.getElementById('fichaNome').textContent = p.nome_completo;
-    document.getElementById('fichaOrigem').textContent = 'Origem: ' + (p.origem||'Manual');
-    document.getElementById('fichaAnotacoes').textContent = p.anotacoes||'Sem dados.';
+    document.getElementById('fichaSub').textContent = p.anotacoes || 'DADOS NÃO PREENCHIDOS';
+    
+    // Resetar abas para a primeira
+    showTab('tab-esquemas', document.querySelector('.tab-link'));
+
+    // Carregar Esquemas
     const grid = document.getElementById('fichaEsquemas'); grid.innerHTML = '';
-    if(p.resultados_teste?.dominios && p.resultados_teste.dominios !== "Registo Manual (Sem Inventário)") {
+    if(p.resultados_teste?.dominios && p.resultados_teste.dominios.includes(':')) {
       p.resultados_teste.dominios.split(' | ').forEach(item => {
         const parts = item.split(': ');
         if(parts.length==2) grid.innerHTML += `<div class="esquema-item"><span>${parts[0]}</span><strong>${parts[1]}</strong></div>`;
       });
-    } else { grid.innerHTML = '<div style="font-size:12px;color:var(--text-light)">Ficha manual.</div>'; }
+    } else { grid.innerHTML = '<div style="font-size:12px;color:var(--text-light)">Nenhum mapeamento de esquemas realizado para esta paciente.</div>'; }
+
+    // Carregar Evolução (Se já existir salvo no banco)
+    document.getElementById('inputEvolucao').value = p.evolucao_clinica || '';
+
     document.getElementById('modalFicha').classList.add('active');
   }
 
   function fecharFicha() { document.getElementById('modalFicha').classList.remove('active'); }
 
+  // SALVAR EVOLUÇÃO NO BANCO
+  async function salvarEvolucao() {
+    const p = pacientesGlobais[indexAtual];
+    const texto = document.getElementById('inputEvolucao').value;
+    
+    try {
+      await fetch(`https://nyelqgsqpqoasywdioxi.supabase.co/rest/v1/clientes?id=eq.${p.id}`, {
+        method: 'PATCH',
+        headers: { 'Content-Type': 'application/json', 'apikey': 'sb_publishable_IVMMnw4_9uF4C6-RBiElUg_lvIq8JRX', 'Authorization': 'Bearer sb_publishable_IVMMnw4_9uF4C6-RBiElUg_lvIq8JRX' },
+        body: JSON.stringify({ evolucao_clinica: texto })
+      });
+      alert('Evolução salva com sucesso no prontuário!');
+      loadPatients(); // Sincroniza
+    } catch(e) { alert('Erro ao salvar evolução.'); }
+  }
+
+  // CADASTRO / EDIÇÃO
   function abrirModalRegisto() {
-    document.getElementById('cadId').value = ''; document.getElementById('modalTitulo').textContent = "Novo Prontuário";
+    document.getElementById('cadId').value = ''; document.getElementById('modalTitulo').textContent = "Nova Paciente";
     document.getElementById('modalRegisto').classList.add('active');
   }
   function fecharModalRegisto() { document.getElementById('modalRegisto').classList.remove('active'); }
@@ -240,17 +288,8 @@
   function abrirEdicao() {
     const p = pacientesGlobais[indexAtual]; fecharFicha();
     document.getElementById('cadId').value = p.id; document.getElementById('modalTitulo').textContent = "Editar Prontuário";
-    document.getElementById('cadNome').value = p.nome_completo; document.getElementById('cadOrigem').value = p.origem||'WhatsApp';
+    document.getElementById('cadNome').value = p.nome_completo;
     document.getElementById('modalRegisto').classList.add('active');
-  }
-
-  async function excluirPaciente() {
-    const p = pacientesGlobais[indexAtual];
-    if(!confirm('Excluir permanentemente '+p.nome_completo+'?')) return;
-    await fetch(`https://nyelqgsqpqoasywdioxi.supabase.co/rest/v1/clientes?id=eq.${p.id}`, {
-      method: 'DELETE', headers: { 'apikey': 'sb_publishable_IVMMnw4_9uF4C6-RBiElUg_lvIq8JRX', 'Authorization': 'Bearer sb_publishable_IVMMnw4_9uF4C6-RBiElUg_lvIq8JRX' }
-    });
-    fecharFicha(); loadPatients();
   }
 
   async function salvarPaciente(e) {
@@ -258,15 +297,24 @@
     const dados = {
       nome_completo: document.getElementById('cadNome').value,
       origem: document.getElementById('cadOrigem').value,
-      anotacoes: `Idade: ${document.getElementById('cadIdade').value} | Profissão: ${document.getElementById('cadProfissao').value} | Tel: ${document.getElementById('cadTelefone').value}`
+      anotacoes: `IDADE: ${document.getElementById('cadIdade').value} | PROFISSÃO: ${document.getElementById('cadProfissao').value} | TEL: ${document.getElementById('cadTelefone').value}`
     };
     const url = id ? `https://nyelqgsqpqoasywdioxi.supabase.co/rest/v1/clientes?id=eq.${id}` : 'https://nyelqgsqpqoasywdioxi.supabase.co/rest/v1/clientes';
     await fetch(url, {
       method: id ? 'PATCH' : 'POST',
-      headers: { 'Content-Type': 'application/json', 'apikey': 'sb_publishable_IVMMnw4_9uF4C6-RBiElUg_lvIq8JRX', 'Authorization': 'Bearer sb_publishable_IVMMnw4_9uF4C6-RBiElUg_lvIq8JRX', 'Prefer': 'return=minimal' },
+      headers: { 'Content-Type': 'application/json', 'apikey': 'sb_publishable_IVMMnw4_9uF4C6-RBiElUg_lvIq8JRX', 'Authorization': 'Bearer sb_publishable_IVMMnw4_9uF4C6-RBiElUg_lvIq8JRX' },
       body: JSON.stringify(dados)
     });
     fecharModalRegisto(); loadPatients();
+  }
+
+  async function excluirPaciente() {
+    const p = pacientesGlobais[indexAtual];
+    if(!confirm('Deseja excluir permanentemente este prontuário?')) return;
+    await fetch(`https://nyelqgsqpqoasywdioxi.supabase.co/rest/v1/clientes?id=eq.${p.id}`, {
+      method: 'DELETE', headers: { 'apikey': 'sb_publishable_IVMMnw4_9uF4C6-RBiElUg_lvIq8JRX', 'Authorization': 'Bearer sb_publishable_IVMMnw4_9uF4C6-RBiElUg_lvIq8JRX' }
+    });
+    fecharFicha(); loadPatients();
   }
 </script>
 </body>
