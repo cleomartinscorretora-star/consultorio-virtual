@@ -7,16 +7,23 @@
     <link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
     <style>
         :root { --bg: #F7F4EF; --text: #4A2F26; --accent: #C38A6B; --border: #E4DDD5; }
-        body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; padding: 40px 20px; }
-        .container { max-width: 800px; margin: 0 auto; background: #FFF; padding: 50px; border-radius: 20px; border: 1px solid var(--border); }
-        h1 { font-family: 'Lora', serif; font-size: 28px; text-align: center; margin-bottom: 40px; }
-        section { margin-bottom: 40px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
-        h3 { color: var(--accent); font-family: 'Lora', serif; margin-bottom: 20px; }
+        body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; padding: 40px 20px; line-height: 1.6; }
+        .container { max-width: 850px; margin: 0 auto; background: #FFF; padding: 50px; border-radius: 20px; border: 1px solid var(--border); box-shadow: 0 10px 30px rgba(0,0,0,0.02); }
+        h1 { font-family: 'Lora', serif; font-size: 28px; text-align: center; margin-bottom: 40px; font-weight: 400; }
+        section { margin-bottom: 50px; padding-bottom: 25px; border-bottom: 1px solid var(--border); }
+        h3 { color: var(--accent); font-family: 'Lora', serif; margin-bottom: 25px; font-size: 18px; text-transform: uppercase; letter-spacing: 1px; }
         .form-group { margin-bottom: 25px; }
-        label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 8px; }
-        input, select, textarea { width: 100%; padding: 12px; border-radius: 8px; border: 1px solid var(--border); background: #FCFAFA; }
-        textarea { height: 100px; }
-        .btn-submit { width: 100%; padding: 20px; background: var(--text); color: #FFF; border: none; border-radius: 10px; cursor: pointer; font-size: 16px; margin-top: 20px; }
+        label { display: block; font-size: 14px; font-weight: 500; margin-bottom: 10px; }
+        input[type="text"], input[type="date"], input[type="email"], input[type="number"], select, textarea { 
+            width: 100%; padding: 14px; border-radius: 10px; border: 1px solid var(--border); background: #FCFAFA; font-size: 15px; outline: none;
+        }
+        textarea { height: 110px; resize: vertical; }
+        .radio-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(180px, 1fr)); gap: 10px; margin-top: 10px; }
+        .radio-item { display: flex; align-items: center; gap: 10px; background: #FCFAFA; padding: 12px; border-radius: 8px; border: 1px solid var(--border); font-size: 14px; cursor: pointer; }
+        .scale-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+        .scale-item { background: #FCFAFA; padding: 15px; border-radius: 10px; border: 1px solid var(--border); }
+        .btn-submit { width: 100%; padding: 22px; background: var(--text); color: #FFF; border: none; border-radius: 12px; cursor: pointer; font-size: 16px; font-weight: 600; margin-top: 20px; transition: 0.3s; }
+        .btn-submit:hover { background: #321f18; }
     </style>
 </head>
 <body>
@@ -27,49 +34,110 @@
             <h3>SEÇÃO 1 – DADOS PESSOAIS</h3>
             <div class="form-group"><label>Nome completo *</label><input type="text" name="Nome" required></div>
             <div class="form-group"><label>Data de nascimento *</label><input type="date" name="Nascimento" required></div>
-            <div class="form-group"><label>Estado civil</label><select name="Estado_Civil"><option>Solteira</option><option>Em relacionamento</option><option>Casada</option><option>Divorciada</option><option>Viúva</option></select></div>
+            <div class="form-group"><label>Estado civil *</label>
+                <select name="Estado_Civil" required>
+                    <option value="">Selecione...</option>
+                    <option>Solteira</option><option>Em relacionamento</option><option>Casada</option><option>Divorciada</option><option>Viúva</option>
+                </select>
+            </div>
+            <div class="form-group"><label>Número de filhos</label><input type="text" name="Filhos"></div>
+            <div class="form-group"><label>Profissão</label><input type="text" name="Profissao"></div>
+            <div class="form-group"><label>Cidade / Estado</label><input type="text" name="Localizacao"></div>
+            <div class="form-group"><label>Telefone *</label><input type="text" name="Telefone" required></div>
+            <div class="form-group"><label>E-mail *</label><input type="email" name="Email" required></div>
         </section>
+
         <section>
             <h3>SEÇÃO 2 – MOTIVO E MOMENTO ATUAL</h3>
-            <div class="form-group"><label>O que te trouxe para este processo? *</label><textarea name="Motivo" required></textarea></div>
-            <div class="form-group"><label>O que mais está doendo emocionalmente hoje? *</label><textarea name="Dor" required></textarea></div>
+            <div class="form-group"><label>O que te trouxe para este processo neste momento? *</label><textarea name="Motivo" required></textarea></div>
+            <div class="form-group"><label>O que mais está doendo emocionalmente hoje? *</label><textarea name="Dor_Hoje" required></textarea></div>
+            <div class="form-group"><label>Se nada mudar, como imagina sua vida daqui a 1 ano? *</label><textarea name="Futuro_1_Ano" required></textarea></div>
         </section>
+
         <section>
             <h3>SEÇÃO 3 – INFÂNCIA E RAIZ EMOCIONAL</h3>
-            <div class="form-group"><label>Quem te criou? *</label><input type="text" name="Criacao" required></div>
-            <div class="form-group"><label>Como foi sua relação com sua mãe? *</label><textarea name="Mae" required></textarea></div>
-            <div class="form-group"><label>Como foi sua relação com seu pai? *</label><textarea name="Pai" required></textarea></div>
+            <div class="form-group"><label>Quem te criou? *</label><input type="text" name="Criadores" required></div>
+            <div class="form-group"><label>Você se sentia pertencente à sua família? *</label>
+                <select name="Pertencimento"><option>Sim</option><option>Não</option><option>Às vezes</option></select>
+            </div>
+            <div class="form-group"><label>Relação com sua mãe? *</label><textarea name="Mae" required></textarea></div>
+            <div class="form-group"><label>Relação com seu pai? *</label><textarea name="Pai" required></textarea></div>
+            <div class="form-group"><label>Lembrança mais marcante da infância? *</label><textarea name="Lembranca" required></textarea></div>
+            <div class="form-group"><label>Momento de rejeição ou invisibilidade? *</label><textarea name="Rejeicao" required></textarea></div>
+            <div class="form-group"><label>Quando percebeu que precisava se esforçar para ser amada? *</label><textarea name="Esforco_Amor" required></textarea></div>
         </section>
+
         <section>
-            <h3>SEÇÃO 4 – MODELO DE AMOR</h3>
-            <div class="form-group"><label>O que você aprendeu sobre amor observando seus pais? *</label><textarea name="Amor_Pais" required></textarea></div>
+            <h3>SEÇÃO 4 – MODELO DE AMOR E CRENÇAS</h3>
+            <div class="form-group"><label>O que aprendeu sobre amor observando seus pais? *</label><textarea name="Aprendizado_Amor" required></textarea></div>
+            <div class="form-group"><label>Que padrão se repete nos seus relacionamentos? *</label><textarea name="Padrao_Relacional" required></textarea></div>
         </section>
-        <section>
-            <h3>SEÇÃO 5 – RELACIONAMENTOS AMOROSOS</h3>
-            <div class="form-group"><label>Você tem medo de abandono? *</label><select name="Abandono"><option>Sim</option><option>Não</option><option>Às vezes</option></select></div>
-        </section>
+
         <section>
             <h3>SEÇÃO 6 – CORPO, FEMININO E SAÚDE</h3>
             <div class="form-group"><label>Como é sua relação com seu corpo hoje? *</label><textarea name="Corpo" required></textarea></div>
+            <div class="form-group"><label>Como você vive sua sexualidade hoje? *</label>
+                <select name="Sexualidade">
+                    <option>Com prazer</option><option>Com culpa</option><option>Com medo</option><option>Com desconexão</option><option>Evito pensar</option>
+                </select>
+            </div>
         </section>
+
+        <section>
+            <h3>SEÇÃO 8 – ESCALA DE EMOÇÕES (0 a 10)</h3>
+            <div class="scale-grid">
+                <div class="scale-item"><label>Ansiedade</label><input type="number" name="E_Ansiedade" min="0" max="10"></div>
+                <div class="scale-item"><label>Medo</label><input type="number" name="E_Medo" min="0" max="10"></div>
+                <div class="scale-item"><label>Tristeza</label><input type="number" name="E_Tristeza" min="0" max="10"></div>
+                <div class="scale-item"><label>Frustração</label><input type="number" name="E_Frustracao" min="0" max="10"></div>
+            </div>
+        </section>
+
+        <section>
+            <h3>SEÇÃO 9 – SAÚDE EMOCIONAL</h3>
+            <div class="form-group"><label>Já recebeu algum diagnóstico psicológico? *</label>
+                <select name="Diagnostico"><option>Não</option><option>Sim</option></select>
+            </div>
+            <div class="form-group"><label>Já teve pensamentos autodestrutivos? *</label>
+                <select name="Auto_Destrutivo"><option>Não</option><option>Sim</option></select>
+            </div>
+        </section>
+
         <button type="submit" class="btn-submit" id="btnEnviar">Enviar para Cleo Martins</button>
     </form>
 </div>
+
 <script>
     const urlParams = new URLSearchParams(window.location.search);
     const pacienteId = urlParams.get('id');
+
     document.getElementById('anamneseForm').onsubmit = async (e) => {
         e.preventDefault();
         const btn = document.getElementById('btnEnviar');
-        btn.innerText = "Enviando...";
-        let textoFinal = "";
-        new FormData(e.target).forEach((v, k) => textoFinal += `${k}: ${v}\n\n`);
-        await fetch(`https://nyelqgsqpqoasywdioxi.supabase.co/rest/v1/clientes?id=eq.${pacienteId}`, {
-            method: 'PATCH',
-            headers: { 'Content-Type': 'application/json', 'apikey': 'sb_publishable_IVMMnw4_9uF4C6-RBiElUg_lvIq8JRX', 'Authorization': 'Bearer sb_publishable_IVMMnw4_9uF4C6-RBiElUg_lvIq8JRX' },
-            body: JSON.stringify({ anamnese: textoFinal })
+        btn.innerText = "Sincronizando com o prontuário...";
+        btn.disabled = true;
+
+        let textoFinal = "--- ANAMNESE COMPLETA ---\n\n";
+        new FormData(e.target).forEach((v, k) => {
+            if(v) textoFinal += `${k.replace(/_/g, ' ')}: ${v}\n\n`;
         });
-        document.getElementById('formContainer').innerHTML = "<h2 style='text-align:center;font-family:Lora;color:#C38A6B'>Recebido com sucesso.</h2>";
+
+        try {
+            await fetch(`https://nyelqgsqpqoasywdioxi.supabase.co/rest/v1/clientes?id=eq.${pacienteId}`, {
+                method: 'PATCH',
+                headers: { 
+                    'Content-Type': 'application/json', 
+                    'apikey': 'sb_publishable_IVMMnw4_9uF4C6-RBiElUg_lvIq8JRX', 
+                    'Authorization': 'Bearer sb_publishable_IVMMnw4_9uF4C6-RBiElUg_lvIq8JRX' 
+                },
+                body: JSON.stringify({ anamnese: textoFinal })
+            });
+            document.getElementById('formContainer').innerHTML = "<div style='text-align:center'><h2 style='font-family:Lora;color:#C38A6B'>Recebido com sucesso.</h2><p style='margin-top:20px'>Sua história foi registrada. Nos vemos em breve.</p></div>";
+        } catch(err) {
+            alert("Erro ao enviar. Verifique sua conexão.");
+            btn.disabled = false;
+            btn.innerText = "Enviar para Cleo Martins";
+        }
     };
 </script>
 </body>
