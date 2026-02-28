@@ -17,7 +17,6 @@
     --success: #687C5A;
     --error-red: #A84848;
   }
-
   * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'DM Sans', sans-serif; }
   body { background-color: var(--bg-color); color: var(--text-main); display: flex; height: 100vh; overflow: hidden; }
 
@@ -40,7 +39,7 @@
   .view-section.active { display: block; }
   @keyframes fadeIn { from { opacity: 0; transform: translateY(5px); } to { opacity: 1; transform: translateY(0); } }
 
-  /* --- DASHBOARD --- */
+  /* --- CARDS & TABLES --- */
   .dashboard-cards { display: grid; grid-template-columns: repeat(3, 1fr); gap: 30px; margin-bottom: 50px; }
   .card { background-color: var(--card-bg); padding: 30px; border-radius: 12px; border: 1px solid var(--border-color); }
   .card-title { font-size: 11px; text-transform: uppercase; color: var(--text-light); margin-bottom: 16px; font-weight: 600; }
@@ -48,8 +47,8 @@
   
   .section-title { font-family: 'Lora', serif; font-size: 22px; margin-bottom: 24px; display: flex; justify-content: space-between; align-items: center; }
   .btn-new { background-color: var(--sidebar-bg); color: #FFF; border: none; padding: 12px 24px; border-radius: 8px; font-size: 12px; text-transform: uppercase; cursor: pointer; }
+  .btn-refresh { background: transparent; border: 1px solid var(--border-color); padding: 10px 16px; border-radius: 8px; font-size: 12px; color: var(--text-light); cursor: pointer; margin-right: 10px;}
 
-  /* --- TABELA --- */
   .table-container { background-color: var(--card-bg); border-radius: 12px; border: 1px solid var(--border-color); overflow: hidden; }
   .patient-table { width: 100%; border-collapse: collapse; text-align: left; }
   .patient-table th { padding: 20px 30px; font-size: 11px; text-transform: uppercase; color: var(--text-light); border-bottom: 1px solid var(--border-color); background: #FCFAFA; }
@@ -57,7 +56,7 @@
   .btn-outline { background: transparent; border: 1px solid var(--border-color); padding: 10px 20px; border-radius: 6px; font-size: 12px; cursor: pointer; transition: 0.3s; color: var(--text-light); }
   .btn-outline:hover { border-color: var(--sidebar-bg); color: var(--sidebar-bg); }
 
-  /* --- MODAL PRONTUÁRIO --- */
+  /* --- MODAL --- */
   .modal-overlay { display: none; position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(74,47,38,0.3); z-index: 1000; justify-content: center; align-items: center; backdrop-filter: blur(4px); }
   .modal-overlay.active { display: flex; }
   .modal-content { background: var(--bg-color); width: 95%; max-width: 800px; max-height: 90vh; border-radius: 20px; padding: 40px; overflow-y: auto; position: relative; border: 1px solid var(--border-color); }
@@ -71,9 +70,10 @@
 
   .esquemas-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
   .esquema-item { background: #FFF; padding: 15px; border-radius: 8px; border: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center; }
-  .text-area-clinica { width: 100%; height: 250px; padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); background: #FFF; font-size: 15px; }
-  
-  .anamnese-box { background: #FFF; padding: 25px; border-radius: 12px; border: 1px solid var(--border-color); white-space: pre-wrap; font-size: 14px; }
+  .esquema-item strong { color: var(--accent); font-family: 'Lora', serif; font-size: 16px; }
+
+  .text-area-clinica { width: 100%; height: 250px; padding: 20px; border-radius: 12px; border: 1px solid var(--border-color); background: #FFF; font-size: 15px; margin-bottom: 20px; }
+  .anamnese-box { background: #FFF; padding: 25px; border-radius: 12px; border: 1px solid var(--border-color); white-space: pre-wrap; font-size: 14px; line-height: 1.6; }
 </style>
 </head>
 <body>
@@ -81,8 +81,8 @@
   <div class="sidebar">
     <div class="logo-area"><h2>Cleo Martins</h2><span>Consultório Digital</span></div>
     <div class="nav-menu">
-      <a class="nav-item active" onclick="changeView('dashboard')">Painel Geral</a>
-      <a class="nav-item" onclick="changeView('patients')">Pacientes & Prontuários</a>
+      <a class="nav-item active" id="menu-dashboard" onclick="changeView('dashboard')">Painel Geral</a>
+      <a class="nav-item" id="menu-patients" onclick="changeView('patients')">Pacientes & Prontuários</a>
     </div>
   </div>
 
@@ -94,15 +94,16 @@
     <div id="view-dashboard" class="view-section active">
       <div class="dashboard-cards">
         <div class="card"><div class="card-title">Atendimentos Hoje</div><div class="card-value">3</div></div>
-        <div class="card"><div class="card-title">Caixa do Dia</div><div class="card-value">R$ 381</div></div>
+        <div class="card"><div class="card-title">Caixa do Dia</div><div class="card-value">R$ 381,00</div></div>
+        <div class="card"><div class="card-title">Caixa do Mês</div><div class="card-value">R$ 4.250,00</div></div>
       </div>
     </div>
 
     <div id="view-patients" class="view-section">
-      <div class="section-title">Arquivo Clínico <button class="btn-new" onclick="abrirModalRegisto()">+ Nova Paciente</button></div>
+      <div class="section-title">Arquivo Clínico <div><button class="btn-refresh" onclick="loadPatients()">↻ Atualizar</button><button class="btn-new" onclick="abrirModalRegisto()">+ Nova Paciente</button></div></div>
       <div class="table-container">
         <table class="patient-table">
-          <thead><tr><th>Nome</th><th>Origem</th><th>Data</th><th>Ações</th></tr></thead>
+          <thead><tr><th>Nome da Paciente</th><th>Origem</th><th>Data Registro</th><th>Ações</th></tr></thead>
           <tbody id="patients-tbody"></tbody>
         </table>
       </div>
@@ -123,8 +124,8 @@
       <div id="tab-esquemas" class="tab-pane active"><div class="esquemas-grid" id="fichaEsquemas"></div></div>
       
       <div id="tab-anamnese" class="tab-pane">
-        <div class="anamnese-box" id="conteudoAnamnese">Nenhuma anamnese enviada ainda.</div>
-        <button class="btn-new" style="margin-top:20px" id="btnCopiarLink">Copiar Link de Anamnese para Paciente</button>
+        <div class="anamnese-box" id="conteudoAnamnese">Aguardando preenchimento...</div>
+        <button class="btn-new" style="margin-top:20px" id="btnCopiarLink">Copiar Link de Anamnese</button>
       </div>
 
       <div id="tab-evolucao" class="tab-pane">
@@ -132,37 +133,28 @@
         <button class="btn-new" onclick="salvarEvolucao()">Salvar Evolução</button>
       </div>
 
-      <div style="margin-top:30px; display:flex; gap:10px">
+      <div style="margin-top:40px; padding-top:20px; border-top:1px solid var(--border-color); display:flex; gap:10px">
         <button class="btn-outline" onclick="abrirEdicao()">✏️ Editar</button>
-        <button class="btn-outline" style="color:var(--error-red)" onclick="excluirPaciente()">🗑️ Excluir</button>
+        <button class="btn-outline" style="color:var(--error-red); border-color:var(--error-red)" onclick="excluirPaciente()">🗑️ Excluir</button>
       </div>
     </div>
   </div>
 
-  <div class="modal-overlay" id="modalRegisto">
-    <div class="modal-content" style="max-width:500px">
-      <button class="btn-close" onclick="fecharModalRegisto()">&times;</button>
-      <h2 id="modalTitulo" style="margin-bottom:20px">Nova Paciente</h2>
-      <form onsubmit="salvarPaciente(event)">
-        <input type="hidden" id="cadId">
-        <div style="margin-bottom:15px"><label>Nome</label><input type="text" id="cadNome" style="width:100%; padding:10px" required></div>
-        <button type="submit" class="btn-submit" style="width:100%; padding:15px; background:var(--sidebar-bg); color:#FFF; border:none">Salvar</button>
-      </form>
-    </div>
-  </div>
-
 <script>
-  // CONFIG BASE
+  const headers = { 'apikey': 'sb_publishable_IVMMnw4_9uF4C6-RBiElUg_lvIq8JRX', 'Authorization': 'Bearer sb_publishable_IVMMnw4_9uF4C6-RBiElUg_lvIq8JRX', 'Content-Type': 'application/json' };
   document.getElementById('dataAtual').textContent = new Date().toLocaleDateString('pt-BR', {weekday:'long', day:'numeric', month:'long'});
+  
   let pacientesGlobais = [];
   let indexAtual = null;
 
-  // FUNÇÕES NAVEGAÇÃO
   function changeView(v) {
     document.querySelectorAll('.view-section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(n => n.classList.remove('active'));
     document.getElementById('view-'+v).classList.add('active');
+    document.getElementById('menu-'+v).classList.add('active');
     if(v==='patients') loadPatients();
   }
+
   function showTab(t, b) {
     document.querySelectorAll('.tab-pane').forEach(p => p.classList.remove('active'));
     document.querySelectorAll('.tab-link').forEach(l => l.classList.remove('active'));
@@ -170,44 +162,36 @@
     b.classList.add('active');
   }
 
-  // API SUPABASE
-  const headers = { 'apikey': 'sb_publishable_IVMMnw4_9uF4C6-RBiElUg_lvIq8JRX', 'Authorization': 'Bearer sb_publishable_IVMMnw4_9uF4C6-RBiElUg_lvIq8JRX', 'Content-Type': 'application/json' };
-
   async function loadPatients() {
-    const resp = await fetch('https://nyelqgsqpqoasywdioxi.supabase.co/rest/v1/clientes?select=*', { headers });
-    pacientesGlobais = (await resp.json()).reverse();
-    document.getElementById('patients-tbody').innerHTML = pacientesGlobais.map((p, i) => `<tr><td>${p.nome_completo}</td><td>${p.origem||'Manual'}</td><td>${new Date(p.created_at).toLocaleDateString()}</td><td><button class="btn-outline" onclick="abrirFicha(${i})">Abrir</button></td></tr>`).join('');
+    const tbody = document.getElementById('patients-tbody');
+    try {
+      const resp = await fetch('https://nyelqgsqpqoasywdioxi.supabase.co/rest/v1/clientes?select=*', { headers });
+      pacientesGlobais = (await resp.json()).reverse();
+      tbody.innerHTML = pacientesGlobais.map((p, i) => `<tr><td style="font-weight:600">${p.nome_completo}</td><td><span class="service-tag tag-diagnostico">${p.origem||'Manual'}</span></td><td>${new Date(p.created_at).toLocaleDateString()}</td><td><button class="btn-outline" onclick="abrirFicha(${i})">Abrir</button></td></tr>`).join('');
+    } catch(e) { tbody.innerHTML = '<tr><td colspan="4">Erro de conexão.</td></tr>'; }
   }
 
   function abrirFicha(i) {
-    indexAtual = i; 
-    const p = pacientesGlobais[i];
-    
+    indexAtual = i; const p = pacientesGlobais[i];
     document.getElementById('fichaNome').textContent = p.nome_completo;
     document.getElementById('inputEvolucao').value = p.evolucao_clinica || '';
+    document.getElementById('conteudoAnamnese').textContent = p.anamnese || 'Aguardando preenchimento do Link de Anamnese por parte da paciente...';
     
-    // Atualiza o texto da anamnese ou mostra o aviso se estiver vazio
-    const conteudoAnamnese = document.getElementById('conteudoAnamnese');
-    conteudoAnamnese.textContent = p.anamnese || 'Aguardando preenchimento do Link de Anamnese por parte da paciente...';
-    
-    // CONFIGURAÇÃO DO LINK (FIXO NO SEU DOMÍNIO)
+    const grid = document.getElementById('fichaEsquemas'); grid.innerHTML = '';
+    if(p.resultados_teste?.dominios?.includes(':')) {
+      p.resultados_teste.dominios.split(' | ').forEach(item => {
+        const parts = item.split(': ');
+        if(parts.length==2) grid.innerHTML += `<div class="esquema-item"><span>${parts[0]}</span><strong>${parts[1]}</strong></div>`;
+      });
+    } else { grid.innerHTML = '<div style="font-size:12px;color:var(--text-light)">Nenhum mapeamento realizado.</div>'; }
+
     const btnLink = document.getElementById('btnCopiarLink');
-    
     btnLink.onclick = () => {
-      // Usamos o seu domínio oficial para evitar erros de redirecionamento
       const linkCompleto = `https://inventario.cleomartins.site/anamnese.html?id=${p.id}`;
-      
       navigator.clipboard.writeText(linkCompleto).then(() => {
-        alert('Prontinho, Cleo! Link da Anamnese copiado. Agora é só colar no WhatsApp da ' + p.nome_completo);
-      }).catch(err => {
-        // Caso o navegador bloqueie a cópia automática por segurança
-        prompt('Houve um pequeno bloqueio. Copie o link abaixo manualmente:', linkCompleto);
+        alert('Link copiado para a paciente ' + p.nome_completo);
       });
     };
-
-    document.getElementById('modalFicha').classList.add('active');
-  }
-
     document.getElementById('modalFicha').classList.add('active');
   }
 
@@ -219,17 +203,14 @@
       method: 'PATCH', headers, body: JSON.stringify({ evolucao_clinica: document.getElementById('inputEvolucao').value })
     });
     alert('Evolução salva!');
+    loadPatients();
   }
 
-  // CADASTRO/EDIÇÃO SIMPLIFICADO
-  function abrirModalRegisto() { document.getElementById('modalRegisto').classList.add('active'); }
-  function fecharModalRegisto() { document.getElementById('modalRegisto').classList.remove('active'); }
-
-  async function salvarPaciente(e) {
-    e.preventDefault();
-    const dados = { nome_completo: document.getElementById('cadNome').value };
-    await fetch('https://nyelqgsqpqoasywdioxi.supabase.co/rest/v1/clientes', { method: 'POST', headers, body: JSON.stringify(dados) });
-    fecharModalRegisto(); loadPatients();
+  async function excluirPaciente() {
+    const p = pacientesGlobais[indexAtual];
+    if(!confirm('Excluir permanentemente?')) return;
+    await fetch(`https://nyelqgsqpqoasywdioxi.supabase.co/rest/v1/clientes?id=eq.${p.id}`, { method: 'DELETE', headers });
+    fecharFicha(); loadPatients();
   }
 </script>
 </body>
